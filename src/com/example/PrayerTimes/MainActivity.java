@@ -21,14 +21,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 public class MainActivity extends Activity {
 
 	public ListView mainListView ;  
 	public ArrayAdapter<String> listAdapter ;  
 	private ListView listView1;
+
 	//Make a calendar instance to get today's date and set it as initial value for the picker
 	public Calendar now = Calendar.getInstance();
+	
 	int cyear = now.get(Calendar.YEAR);
 	int cmonth = now.get(Calendar.MONTH);
 	int cday = now.get(Calendar.DAY_OF_MONTH);
