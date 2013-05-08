@@ -33,14 +33,20 @@ public class MainActivity extends Activity {
 	int cyear = now.get(Calendar.YEAR);
 	int cmonth = now.get(Calendar.MONTH);
 	int cday = now.get(Calendar.DAY_OF_MONTH);
+	
+	//Initialize our settings blob
+	settingsBlob mySettings = new settingsBlob(37.9747222, -87.5558333, -5, cyear, cmonth+1, cday);
+	Calculator myTimeCalculator = new Calculator(mySettings);
+
+	
 	String city_string="Arlington, VA";
 	
 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        
+        Toast.makeText(MainActivity.this, "The angle is " + myTimeCalculator.calculateAngle(14615),Toast.LENGTH_LONG).show();
+      
         final Weather weather_data[] = new Weather[]
                 {
                     new Weather(R.drawable.fajr, "Fajr","03:32:11am"),
