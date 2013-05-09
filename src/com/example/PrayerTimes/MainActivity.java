@@ -21,25 +21,46 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 public class MainActivity extends Activity {
 
 	public ListView mainListView ;  
 	public ArrayAdapter<String> listAdapter ;  
 	private ListView listView1;
+
 	//Make a calendar instance to get today's date and set it as initial value for the picker
 	public Calendar now = Calendar.getInstance();
+	
 	int cyear = now.get(Calendar.YEAR);
 	int cmonth = now.get(Calendar.MONTH);
 	int cday = now.get(Calendar.DAY_OF_MONTH);
+	
+	//Initialize our settings blob
+	settingsBlob mySettings = new settingsBlob(37.9747222, -87.5558333, -5, cyear, cmonth+1, cday);
+	Calculator myTimeCalculator = new Calculator(mySettings);
+
+	
 	String city_string="Arlington, VA";
 	
 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      
+        // Initialize list of prayers to calculate times for
+        ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
+        prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
+        prayersList.add(new Prayer(0, "exact", "Sunrise"));
+        prayersList.add(new Prayer(0, "max", "Dhuhr"));
+        prayersList.add(new Prayer(0, "exact", "Sunset"));
+        prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
+    	
+        // Calculate prayer times and store them inside the objects
+    	myTimeCalculator.getTimes(prayersList);
 
-        
+    	// Loop over the objects showing their times
+		for(int index=0;index<5;index++)
+			Toast.makeText(getApplicationContext(), ""+ prayersList.get(index).name + " prayer time is : " + myTimeCalculator.pretty(prayersList.get(index).prayerTime),Toast.LENGTH_LONG).show();
+
         final Weather weather_data[] = new Weather[]
                 {
                     new Weather(R.drawable.fajr, "Fajr","03:32:11am"),
