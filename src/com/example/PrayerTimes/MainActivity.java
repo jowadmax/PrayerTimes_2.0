@@ -46,6 +46,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
       
+        // Initialize list of prayers to calculate times for
+        ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
+        prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
+        prayersList.add(new Prayer(0, "exact", "Sunrise"));
+        prayersList.add(new Prayer(0, "max", "Dhuhr"));
+        prayersList.add(new Prayer(0, "exact", "Sunset"));
+        prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
+    	
+        // Calculate prayer times and store them inside the objects
+    	myTimeCalculator.getTimes(prayersList);
+
         final Weather weather_data[] = new Weather[]
                 {
                     new Weather(R.drawable.fajr, "Fajr","03:32:11am"),
