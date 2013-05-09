@@ -6,49 +6,64 @@ public class Calculator {
 	public Calculator(settingsBlob newSettings){
 	this.mySettings = newSettings;
 	}
-	private int dayOfYear(int year, int month, int day){
-		int doy=0;
-		
-		int months[] = {0,31,28,31,30,31,30,31,31,30,31,30};
-		
-		//Fill in the days of the past months
-		for (int i=1 ; i<month ;i++)
-			doy+=months[i];
-		
-		//Fill in the days of this month
-		doy+=day;
-		
-		//Add one day if this is a leap year (and we're past February
-		if ( ((year%4==0 && year!=((int)year/10)*10) || year%400==0 ) && month>2)
-			doy++;
-		
-		return doy;
-	}
 	public double calculateAngle(int second){
-		int doy = dayOfYear(mySettings.year, mySettings.month, mySettings.day);
-		int hour, min, sec;
-		
-		hour = second/3600;
-		min = (second/60) % 60;
-		sec = second % 60;
-
-		hour=hour-mySettings.timeZone;
-		if(hour>23){
-			hour-=24;
-			doy++;
-		}	    
-
-		// Calculate the time in hour and its fractions
-		hour+=(min/60.0)+(sec/3600);
-		
-		//Start calculations
-		double y=(360/365.25)*(doy +hour/24); //OK (Degs)
-		double D=0.006918 - 0.399912*Math.cos((double) (y/180.0*Math.PI)) + 0.070257*Math.sin(y/180.0*Math.PI) - 0.006758*Math.cos(2*y/180.0*Math.PI) + 0.000907*Math.sin(2*y/180.0*Math.PI) - 0.002697*Math.cos(3*y/180.0*Math.PI) + 0.00148*Math.sin(3*y/180.0*Math.PI); D=D*180.0/Math.PI; //OK (Degs)
-		double TC = 0.004297+0.107029*Math.cos(y/180.0*Math.PI)-1.837877*Math.sin(y/180.0*Math.PI)-0.837378*Math.cos(2*y/180.0*Math.PI)-2.340475*Math.sin(2*y/180.0*Math.PI); //OK (Degs)
-		double SHA = (hour-12)*15 + mySettings.longitude + TC; //OK (Degs)
- 	   	double SZA = Math.acos(Math.sin(mySettings.latitude/180.0*Math.PI)*Math.sin(D/180.0*Math.PI)+Math.cos(mySettings.latitude/180.0*Math.PI)*Math.cos(D/180.0*Math.PI)*Math.cos(SHA/180.0*Math.PI)); SZA=SZA*180.0/Math.PI; //OK (Degs)
- 	   	
- 	   	//Return the sun angle in degrees
-		return 90-SZA;
+	    double 	B3 = mySettings.latitude,     // Latitude
+	    		B4 = mySettings.longitude;    // Longitude
+	    int		B5 = mySettings.timeZone,             // Offset
+	    		year = mySettings.year, 
+	    		month = mySettings.month,
+	    		day = mySettings.day,
+	    		hour = (int)second/3600,
+	    		min = ((int)second/60) % 60,
+	    		sec = second % 60;
+	    	
+	    //Equations are obtained from (http://www.esrl.noaa.gov/gmd/grad/solcalc/NOAA_Solar_Calculations_day.xls)
+	    double E3 = second/(60*60*24.0); //(H:M:S -> Day fraction)
+	    double F3 = julianDate(year, month, day, hour, min, sec, B5);
+	    double G3 = (F3-2451545)/36525;
+	    double I3 = mod(280.46646+G3*(36000.76983 + G3*0.0003032),360);
+	    double J3 = 357.52911+G3*(35999.05029 - 0.0001537*G3);
+	    double K3 = 0.016708634-G3*(0.000042037+0.0000001267*G3);
+	    double L3 = Math.sin(toRadians(J3))*(1.914602-G3*(0.004817+0.000014*G3))+Math.sin(toRadians(2*J3))*(0.019993-0.000101*G3)+Math.sin(toRadians(3*J3))*0.000289;
+	    double M3 = I3+L3;
+	    double P3 = M3-0.00569-0.00478*Math.sin(toRadians(125.04-1934.136*G3));
+	    double Q3 = 23+(26+((21.448-G3*(46.815+G3*(0.00059-G3*0.001813))))/60)/60;
+	    double R3 = Q3+0.00256*Math.cos(toRadians(125.04-1934.136*G3));
+	    double T3 = toDegrees(Math.asin(Math.sin(toRadians(R3))*Math.sin(toRadians(P3))));
+	    double U3 = Math.tan(toRadians(R3/2))*Math.tan(toRadians(R3/2));
+	    double V3 = 4*toDegrees(U3*Math.sin(2*toRadians(I3))-2*K3*Math.sin(toRadians(J3))+4*K3*U3*Math.sin(toRadians(J3))*Math.cos(2*toRadians(I3))-0.5*U3*U3*Math.sin(4*toRadians(I3))-1.25*K3*K3*Math.sin(2*toRadians(J3)));
+	    double AB3 = mod(E3*1440+V3+4*B4-60*B5,1440);
+	    double AC3 = AB3/4<0?AB3/4+180:AB3/4-180;
+	    double AD3 = toDegrees(Math.acos(Math.sin(toRadians(B3))*Math.sin(toRadians(T3))+Math.cos(toRadians(B3))*Math.cos(toRadians(T3))*Math.cos(toRadians(AC3))));
+	    double AE3 = 90-AD3;
+	    double AF3 = AE3>85?0:AE3>5?58.1/Math.tan(toRadians(AE3))-0.07/Math.pow(Math.tan(toRadians(AE3)),3)+0.000086/Math.pow(Math.tan(toRadians(AE3)),5):AE3>-0.575?1735+AE3*(-518.2+AE3*(103.4+AE3*(-12.79+AE3*0.711))):-20.772/Math.tan(toRadians(AE3))/3600;
+	    double AG3 = AE3+AF3;
+	    return AG3;
 	}
+	private double julianDate(int year, int month, int day, int hour, int minute, int second, int offset){
+		/* equation obtained from (http://bcn.boulder.co.us/y2k/y2kbcalc.htm) */
+		double jd = (( 1461 * ( year + 4800 + ( month - 14 ) / 12 ) ) / 4 +
+		      ( 367 * ( month - 2 - 12 * ( ( month - 14 ) / 12 ) ) ) / 12 -
+		      ( 3 * ( ( year + 4900 + ( month - 14 ) / 12 ) / 100 ) ) / 4 +
+		      day - 32075) -.5;
+
+		hour-=offset;
+
+		jd+=hour/24.0;
+		jd+=minute/(24.0 * 60);
+		jd+=second/(24.0 * 60 * 60);
+
+		return jd;
+		}
+	private double mod(double number, double modNumber){
+		while(number >= modNumber)
+		    number-=modNumber;
+		return number;
+		}
+	private	double toRadians(double num){
+		return (num*Math.PI)/180.0;
+		}
+	private	double toDegrees(double num){
+		return (num*180.0)/ Math.PI;
+		}
 }
