@@ -1,12 +1,66 @@
 package com.example.PrayerTimes;
 
+import java.util.ArrayList;
+
 public class Calculator {
+
 	private settingsBlob mySettings;
 	
+	// Class usable functions
 	public Calculator(settingsBlob newSettings){
 	this.mySettings = newSettings;
 	}
-	public double calculateAngle(int second){
+	public void getTimes(ArrayList<Prayer> prayersList){
+		// Start calculations time at 2:30am
+		int time=9000;		
+		//Loop through all Prayers objects
+		for(int index=0; index < prayersList.size(); index++){
+
+			if(prayersList.get(index).type == "exact"){
+				//Calculate the time for the Prayer object
+				Prayer temp = calculateExact(prayersList.get(index), time);
+				
+				//Store the info inside the object
+				prayersList.get(index).prayerTime = temp.prayerTime;
+				prayersList.get(index).timeTaken = temp.timeTaken;
+				
+				//Increase time counter
+				time+= prayersList.get(index).timeTaken;
+			}
+			
+			if(prayersList.get(index).type == "max"){
+				//HACK: speed up the performance by skipping four hours after sunrise
+				time+=4*3600;
+				
+				//Calculate the max angle from now till the sun gets to 0 degrees 
+				Prayer temp = calculateMax(prayersList.get(index), 0 , time);
+				
+				//Store the info inside the object
+				prayersList.get(index).prayerTime = temp.prayerTime;
+				prayersList.get(index).timeTaken = temp.timeTaken;
+
+				//Increase time counter
+				time+= temp.timeTaken;
+			}
+			
+		}
+	}
+	public String pretty(int second){
+		String part="am";
+		int hour = (int)second/3600,
+			min = ((int)second/60) % 60,
+			sec = second % 60;
+		if(hour>12){
+			hour-=12;
+			part="pm";
+		}
+		String string = String.format("%02d:%02d:%02d%s",hour,min,sec,part);
+		return string;
+		
+	}
+	
+	// getTimes helper functions
+	private double calculateAngle(int second){
 	    double 	B3 = mySettings.latitude,     // Latitude
 	    		B4 = mySettings.longitude;    // Longitude
 	    int		B5 = mySettings.timeZone,             // Offset
@@ -37,9 +91,41 @@ public class Calculator {
 	    double AD3 = toDegrees(Math.acos(Math.sin(toRadians(B3))*Math.sin(toRadians(T3))+Math.cos(toRadians(B3))*Math.cos(toRadians(T3))*Math.cos(toRadians(AC3))));
 	    double AE3 = 90-AD3;
 	    double AF3 = AE3>85?0:AE3>5?58.1/Math.tan(toRadians(AE3))-0.07/Math.pow(Math.tan(toRadians(AE3)),3)+0.000086/Math.pow(Math.tan(toRadians(AE3)),5):AE3>-0.575?1735+AE3*(-518.2+AE3*(103.4+AE3*(-12.79+AE3*0.711))):-20.772/Math.tan(toRadians(AE3))/3600;
+	    AF3/=3600;
 	    double AG3 = AE3+AF3;
+
 	    return AG3;
 	}
+	private Prayer calculateExact(Prayer prayer, int startingTime){
+		int time=startingTime;
+		double leastAbsolute=100;
+
+		while(Math.abs(calculateAngle(time) - prayer.desiredAngle) < leastAbsolute){
+			leastAbsolute = Math.abs(calculateAngle(time) - prayer.desiredAngle);
+			prayer.prayerTime = time;
+			time+=10;
+		}
+		
+		prayer.timeTaken = time-startingTime; 
+		return prayer;
+	}
+	private Prayer calculateMax(Prayer prayer, double to, int startingTime){
+		double  angle, maxAngle = -400;
+		int time = startingTime;
+		
+		angle = calculateAngle(time);
+		while(angle > maxAngle &&  Math.abs(angle) > to){
+			maxAngle = angle;
+			prayer.prayerTime = time;
+			time+=10;
+			angle = calculateAngle(time);
+		}
+		prayer.timeTaken = time - startingTime;
+		
+		return prayer;
+	}
+
+	// calculateAngle helper functions
 	private double julianDate(int year, int month, int day, int hour, int minute, int second, int offset){
 		/* equation obtained from (http://bcn.boulder.co.us/y2k/y2kbcalc.htm) */
 		double jd = (( 1461 * ( year + 4800 + ( month - 14 ) / 12 ) ) / 4 +
