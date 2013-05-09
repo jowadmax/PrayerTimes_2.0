@@ -45,7 +45,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(MainActivity.this, "The angle is " + myTimeCalculator.calculateAngle(14615),Toast.LENGTH_LONG).show();
       
         final Weather weather_data[] = new Weather[]
                 {
