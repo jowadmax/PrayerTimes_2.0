@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Calculator {
 
-	private settingsBlob mySettings;
+	public settingsBlob mySettings;
 	
 	// Class usable functions
 	public Calculator(settingsBlob newSettings){

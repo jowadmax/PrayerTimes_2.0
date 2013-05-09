@@ -47,34 +47,37 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
       
         // Initialize list of prayers to calculate times for
-        ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
+        final ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
         prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
-        prayersList.add(new Prayer(0, "exact", "Sunrise"));
+        prayersList.add(new Prayer(-1.0, "exact", "Sunrise"));
         prayersList.add(new Prayer(0, "max", "Dhuhr"));
-        prayersList.add(new Prayer(0, "exact", "Sunset"));
-        prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
+        prayersList.add(new Prayer(-1, "exact", "Sunset"));
+        prayersList.add(new Prayer(-4.003, "exact", "Maghrib"));
     	
         // Calculate prayer times and store them inside the objects
     	myTimeCalculator.getTimes(prayersList);
 
     	// Loop over the objects showing their times
-		for(int index=0;index<5;index++)
+		/*for(int index=0;index<5;index++)
 			Toast.makeText(getApplicationContext(), ""+ prayersList.get(index).name + " prayer time is : " + myTimeCalculator.pretty(prayersList.get(index).prayerTime),Toast.LENGTH_LONG).show();
-
+		*/
+    	
         final Weather weather_data[] = new Weather[]
                 {
-                    new Weather(R.drawable.fajr, "Fajr","03:32:11am"),
-                    new Weather(R.drawable.sunrise, "Sunrise","06:14:43am"),
-                    new Weather(R.drawable.duhr, "Duhr","01:14:06pm"),
-                    new Weather(R.drawable.sunset, "Sunset","08:14:14pm"),
-                    new Weather(R.drawable.maghrib, "Maghrib","08:31:36pm"),
+                    new Weather(R.drawable.fajr, "Fajr",		myTimeCalculator.pretty(prayersList.get(0).prayerTime)),
+                    new Weather(R.drawable.sunrise, "Sunrise",	myTimeCalculator.pretty(prayersList.get(1).prayerTime)),
+                    new Weather(R.drawable.duhr, "Duhr",		myTimeCalculator.pretty(prayersList.get(2).prayerTime)),
+                    new Weather(R.drawable.sunset, "Sunset",	myTimeCalculator.pretty(prayersList.get(3).prayerTime)),
+                    new Weather(R.drawable.maghrib, "Maghrib",	myTimeCalculator.pretty(prayersList.get(4).prayerTime)),
                     new Weather(R.drawable.midnight, "Midnight","12:23:00am")
                 };
-        WeatherAdapter adapter = new WeatherAdapter(this, 
+        Toast.makeText(getApplicationContext(), ""+ this,Toast.LENGTH_LONG).show();
+        WeatherAdapter adapter = new WeatherAdapter(com.example.PrayerTimes.MainActivity.this, 
                 R.layout.listview_item_row, weather_data);
         
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
+        
         
         // Find the ListView resource.   
         mainListView = (ListView) findViewById( R.id.list);
@@ -129,7 +132,23 @@ public class MainActivity extends Activity {
        				 //Do whatever you want with the variables you get here
        				Button myButton2 = (Button)findViewById(R.id.button3);
        		        myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth)+"/"+String.valueOf(year));
+                    
+       		        //Reconfigure out settings blob.
+       		        myTimeCalculator.mySettings.year = cyear;
+       		        myTimeCalculator.mySettings.month = cmonth+1;
+       		        myTimeCalculator.mySettings.day = cday;
        		        
+       		        //Recalculate Prayer times
+       		        myTimeCalculator.getTimes(prayersList);
+       		        
+       		        // Re-set the times for prayers
+       		        weather_data[0].time=myTimeCalculator.pretty(prayersList.get(0).prayerTime);
+       		        weather_data[1].time=myTimeCalculator.pretty(prayersList.get(1).prayerTime);
+       		        weather_data[2].time=myTimeCalculator.pretty(prayersList.get(2).prayerTime);
+       		        weather_data[3].time=myTimeCalculator.pretty(prayersList.get(3).prayerTime);
+       		        weather_data[4].time=myTimeCalculator.pretty(prayersList.get(4).prayerTime);
+                    listView1.setAdapter(new WeatherAdapter(com.example.PrayerTimes.MainActivity.this, R.layout.listview_item_row, weather_data));
+                    
        			 }
        			},  cyear, cmonth, cday);
        		calender.setTitle("Show prayer times for:");
