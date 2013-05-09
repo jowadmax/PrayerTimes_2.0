@@ -57,6 +57,10 @@ public class MainActivity extends Activity {
         // Calculate prayer times and store them inside the objects
     	myTimeCalculator.getTimes(prayersList);
 
+    	// Loop over the objects showing their times
+		for(int index=0;index<5;index++)
+			Toast.makeText(getApplicationContext(), ""+ prayersList.get(index).name + " prayer time is : " + myTimeCalculator.pretty(prayersList.get(index).prayerTime),Toast.LENGTH_LONG).show();
+
         final Weather weather_data[] = new Weather[]
                 {
                     new Weather(R.drawable.fajr, "Fajr","03:32:11am"),
