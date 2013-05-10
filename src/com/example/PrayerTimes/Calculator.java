@@ -43,6 +43,7 @@ public class Calculator {
 				time+= temp.timeTaken;
 			}
 			
+			
 		}
 	}
 	public String pretty(int second){
@@ -54,13 +55,14 @@ public class Calculator {
 			hour-=12;
 			part="pm";
 		}
-		String string = String.format("%02d:%02d:%02d%s",hour,min,sec,part);
+		if(sec>=30) min++;
+		String string = String.format("%02d:%02d%s",hour,min,part);
 		return string;
 		
 	}
 	
 	// getTimes helper functions
-	private double calculateAngle(int second){
+	public double calculateAngle(int second){
 	    double 	B3 = mySettings.latitude,     // Latitude
 	    		B4 = mySettings.longitude;    // Longitude
 	    int		B5 = mySettings.timeZone,             // Offset
@@ -103,7 +105,7 @@ public class Calculator {
 		while(Math.abs(calculateAngle(time) - prayer.desiredAngle) < leastAbsolute){
 			leastAbsolute = Math.abs(calculateAngle(time) - prayer.desiredAngle);
 			prayer.prayerTime = time;
-			time+=10;
+			time+=5;
 		}
 		
 		prayer.timeTaken = time-startingTime; 
@@ -117,7 +119,7 @@ public class Calculator {
 		while(angle > maxAngle &&  Math.abs(angle) > to){
 			maxAngle = angle;
 			prayer.prayerTime = time;
-			time+=10;
+			time+=5;
 			angle = calculateAngle(time);
 		}
 		prayer.timeTaken = time - startingTime;
