@@ -57,7 +57,7 @@
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
         android:maxLines="1"
-        android:text="38.887534"
+        android:text="0.0"
         android:textSize="14dp" />
 
     <EditText
@@ -71,7 +71,7 @@
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
         android:maxLines="1"
-        android:text="-77.084592 "
+        android:text="0.0"
         android:textSize="14dp" />
 
     <EditText
@@ -85,7 +85,7 @@
         android:ems="10"
         android:inputType="numberSigned"
         android:maxLines="1"
-        android:text="-4"
+        android:text="0"
         android:textSize="14dp" />
 
     <CheckBox
