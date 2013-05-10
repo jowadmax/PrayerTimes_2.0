@@ -325,7 +325,7 @@ public class MainActivity extends Activity {
 		}  
 		public void onProviderEnabled(String s) {
 			if(mainProfile.useGPS)
-				Toast.makeText(MainActivity.this,"GPS is turned off, please either turn GPS on or use manual coordinates.",Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this,"GPS Enabled, getting coordinates.",Toast.LENGTH_LONG).show();
 		}
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
