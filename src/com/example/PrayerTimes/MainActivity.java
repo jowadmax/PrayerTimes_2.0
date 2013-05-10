@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 		longit.setOnFocusChangeListener(EditBoxesListener);
 		longit.setEnabled(!mainProfile.useGPS);
 		if(mainProfile.useGPS == false)
-			longit.setText(""+mainProfile.savedLatitude);
+			longit.setText(""+mainProfile.savedLongitude);
 
 		EditText timezoneEditText = (EditText)findViewById(R.id.editText3);
 		timezoneEditText.setOnFocusChangeListener(EditBoxesListener);
