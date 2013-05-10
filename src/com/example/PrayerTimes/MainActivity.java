@@ -5,12 +5,8 @@ import java.util.Calendar;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -73,64 +68,8 @@ public class MainActivity extends Activity {
         //Define the TimeZone checkbox
         CheckBox timezoneCheckBox = (CheckBox)findViewById(R.id.checkBox2);
         timezoneCheckBox.setOnClickListener(timezoneCheckBoxListener);
-}
+} //END OF OnCreate
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Check if the menu selection is Set Timezone option
-		if(item.getItemId()==R.id.menu_timezone){
-			// Declare the timezones list
-			final String[] items = {		"GMT -11:00","GMT -10:00","GMT -09:00","GMT -08:00",
-       										"GMT -07:00","GMT -06:00","GMT -05:00","GMT -04:00", 
-       										"GMT -03:00","GMT -02:00","GMT -01:00","GMT +00:00", 
-       										"GMT +01:00","GMT +02:00","GMT +03:00","GMT +04:00", 
-       										"GMT +05:00","GMT +06:00","GMT +07:00","GMT +08:00", 
-       										"GMT +09:00","GMT +10:00","GMT +11:00"
-       								};
-			// Create a blank Dialog Builder
-			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-			// Set the dialog settings
-			builder.setTitle("Choose Timezone:");
-			builder.setCancelable(true);
-			
-			// Assign the list and set the OnClickListener method
-			builder.setItems(items, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					// Declare the offset integer
-					int offset;
-					// Get the actual offset out of the list selection
-					if(item<11)
-						offset=item-11;
-   		    			else
-   		    				if(item==11)
-   		    					offset=0;
-   		    				else
-   		    					offset=item-11;
-   		    	
-					Toast.makeText(MainActivity.this, String.format("GMT %1$s timezone is selected!", offset), Toast.LENGTH_SHORT).show();
-				}
-				
-			});
-			// Create the alert out of the builder
-			AlertDialog alert = builder.create();
-			// Show the dialog
-			alert.show();
-		}
-
-		// Check if the option is the City Manager
-		if(item.getItemId()==R.id.menu_cityManager){
-			
-			
-		}
-	return true;
-}
 	public void calculateAndDisplay(ArrayList<Prayer> prayersList){
         // Calculate prayer times and store them inside the objects
     	myTimeCalculator.getTimes(prayersList);
@@ -160,8 +99,7 @@ public class MainActivity extends Activity {
 	}
 
 	// Buttons and other elements' functions
-
-   View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
+	View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
      	 public void onClick(View v) {
      		 
      	   final Dialog dialog = new Dialog(MainActivity.this);
@@ -184,8 +122,7 @@ public class MainActivity extends Activity {
            dialog.show();
        }
    };
-   
-   View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
+   	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
      	 public void onClick(View v) {
 
      		 //Make a datePicker dialog and initialize its listener and its onDateSet function.
@@ -214,8 +151,7 @@ public class MainActivity extends Activity {
      		calender.show(); 
      	 }
     };
-    
-   View.OnClickListener gpsCheckBoxListener = new View.OnClickListener() {
+    View.OnClickListener gpsCheckBoxListener = new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -225,8 +161,7 @@ public class MainActivity extends Activity {
 				longit.setEnabled(!((CheckBox)v).isChecked());
 			}
 	};
-	
-   View.OnClickListener timezoneCheckBoxListener = new View.OnClickListener() {
+	View.OnClickListener timezoneCheckBoxListener = new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -235,4 +170,5 @@ public class MainActivity extends Activity {
 				
 			}
 	};
+
 }
