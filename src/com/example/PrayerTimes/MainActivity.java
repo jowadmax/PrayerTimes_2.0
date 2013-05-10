@@ -205,7 +205,9 @@ public class MainActivity extends Activity {
 			if(mainProfile.useGPS == true)
 				setupGPS();
 			else
+			{
 				locationManager.removeUpdates(locationListener);
+			}
 
 			EditText latit = (EditText)findViewById(R.id.editText1);
 			latit.setEnabled(!((CheckBox)v).isChecked());
