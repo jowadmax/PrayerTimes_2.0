@@ -1,7 +1,6 @@
 package com.example.PrayerTimes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 import android.os.Bundle;
@@ -38,6 +37,9 @@ public class MainActivity extends Activity {
 	settingsBlob mySettings = new settingsBlob(37.9747222, -87.5558333, -5, cyear, cmonth+1, cday);
 	Calculator myTimeCalculator = new Calculator(mySettings);
 
+	// Initialize an empty list of prayers
+    final ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
+
 	
 	String city_string="Arlington, VA";
 	
@@ -46,96 +48,31 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
       
-        // Initialize a list of prayers to calculate times for
-        final ArrayList<Prayer> prayersList = new ArrayList<Prayer>();
+        //Add prayer objects to the prayersList
         prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
         prayersList.add(new Prayer(-0.83, "exact", "Sunrise"));
         prayersList.add(new Prayer(0, "max", "Dhuhr"));
         prayersList.add(new Prayer(-0.83, "exact", "Sunset"));
-        prayersList.add(new Prayer(-4.003, "exact", "Maghrib"));
+        prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
         prayersList.add(new Prayer(0, "noCalc", "Midnight"));
 
         //Calculate the prayer times for the PrayersList and display them on the WeatherList
         calculateAndDisplay(prayersList);
               
-        Button myButton = (Button)findViewById(R.id.button1);
-        myButton.setOnClickListener(new View.OnClickListener() {
-       	 public void onClick(View v) {
-       		 
-       		 final Dialog dialog = new Dialog(MainActivity.this);
-             dialog.setContentView(R.layout.maindialog);
-             dialog.setTitle("Choose Timezone:");
-             dialog.setCancelable(true);
-             
-             //set up button
-             Button button = (Button) dialog.findViewById(R.id.Button01);
-             button.setOnClickListener(new View.OnClickListener() {
-             @Override
-                 public void onClick(View v) {
-                     dialog.dismiss();
-                 }
-             });
-
-             //now that the dialog is set up, it's time to show it    
-             dialog.show();
-         }
-
-     });
+        Button locOnMapButton = (Button)findViewById(R.id.button1);
+        locOnMapButton.setOnClickListener(locOnMapButtonListener);
         
-        Button myButton2 = (Button)findViewById(R.id.button3);
-        myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
-        myButton2.setOnClickListener(new View.OnClickListener() {
-       	 public void onClick(View v) {
-       		 //Make a datePicker dialog and initialize its listener and its onDateSet function.
-       		 Dialog calender = new DatePickerDialog(MainActivity.this,  new DatePickerDialog.OnDateSetListener() {
-       		// onDateSet method
-       			 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-       				 cyear=year;
-       				 cmonth=monthOfYear;
-       				 cday=dayOfMonth;
-
-       				 //Do whatever you want with the variables you get here
-       				Button myButton2 = (Button)findViewById(R.id.button3);
-       		        myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth)+"/"+String.valueOf(year));
-                    
-       		        //Reconfigure our settings blob.
-       		        myTimeCalculator.mySettings.year = cyear;
-       		        myTimeCalculator.mySettings.month = cmonth+1;
-       		        myTimeCalculator.mySettings.day = cday;
-       		        
-       		        //Calculate the new prayer times for the updated PrayersList and display them on the WeatherList
-       		        calculateAndDisplay(prayersList);                    
-       		        
-       			 }
-       			},  cyear, cmonth, cday);
-       		calender.setTitle("Show prayer times for:");
-       		calender.show(); 
-       	 }
-        });
+        Button changeDateButton = (Button)findViewById(R.id.button3);
+        changeDateButton.setText("Prayer times table for "+city_string+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
+        changeDateButton.setOnClickListener(changeDateButtonListener);
 
         //Define the GPS checkBox
-        CheckBox checkBox1 = (CheckBox)findViewById(R.id.checkBox1);
-        checkBox1.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				EditText latit = (EditText)findViewById(R.id.editText1);
-				EditText longit = (EditText)findViewById(R.id.editText2);
-				latit.setEnabled(!((CheckBox)v).isChecked());
-				longit.setEnabled(!((CheckBox)v).isChecked());
-			}
-		});
+        CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
+        gpsCheckBox.setOnClickListener(gpsCheckBoxListener);
+        
         //Define the TimeZone checkbox
-        CheckBox timezone_checkbox = (CheckBox)findViewById(R.id.checkBox2);
-        timezone_checkbox.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			EditText timezone_field = (EditText)findViewById(R.id.editText3);
-			timezone_field.setEnabled(!((CheckBox)v).isChecked());
-				
-			}
-		});
+        CheckBox timezoneCheckBox = (CheckBox)findViewById(R.id.checkBox2);
+        timezoneCheckBox.setOnClickListener(timezoneCheckBoxListener);
 }
 
 
@@ -221,4 +158,81 @@ public class MainActivity extends Activity {
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
 	}
+
+	// Buttons and other elements' functions
+
+   View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
+     	 public void onClick(View v) {
+     		 
+     	   final Dialog dialog = new Dialog(MainActivity.this);
+     	   
+           dialog.setContentView(R.layout.maindialog);
+           dialog.setTitle("Choose Timezone:");
+           dialog.setCancelable(true);
+           
+           //set up button
+           Button button = (Button) dialog.findViewById(R.id.Button01);
+           View.OnClickListener buttonListener = new View.OnClickListener() {
+           @Override
+               public void onClick(View v) {
+                   dialog.dismiss();
+               }
+           }; 
+           button.setOnClickListener(buttonListener);
+
+           //now that the dialog is set up, it's time to show it    
+           dialog.show();
+       }
+   };
+   
+   View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
+     	 public void onClick(View v) {
+
+     		 //Make a datePicker dialog and initialize its listener and its onDateSet function.
+     		 Dialog calender = new DatePickerDialog(MainActivity.this,  new DatePickerDialog.OnDateSetListener() {
+     		// onDateSet method
+     			 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+     				 cyear=year;
+     				 cmonth=monthOfYear;
+     				 cday=dayOfMonth;
+
+     				 //Do whatever you want with the variables you get here
+     				Button myButton2 = (Button)findViewById(R.id.button3);
+     		        myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth)+"/"+String.valueOf(year));
+                  
+     		        //Reconfigure our settings blob.
+     		        myTimeCalculator.mySettings.year = cyear;
+     		        myTimeCalculator.mySettings.month = cmonth+1;
+     		        myTimeCalculator.mySettings.day = cday;
+     		        
+     		        //Calculate the new prayer times for the updated PrayersList and display them on the WeatherList
+     		        calculateAndDisplay(prayersList);                    
+     		        
+     			 }
+     			},  cyear, cmonth, cday);
+     		calender.setTitle("Show prayer times for:");
+     		calender.show(); 
+     	 }
+    };
+    
+   View.OnClickListener gpsCheckBoxListener = new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				EditText latit = (EditText)findViewById(R.id.editText1);
+				EditText longit = (EditText)findViewById(R.id.editText2);
+				latit.setEnabled(!((CheckBox)v).isChecked());
+				longit.setEnabled(!((CheckBox)v).isChecked());
+			}
+	};
+	
+   View.OnClickListener timezoneCheckBoxListener = new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			EditText timezone_field = (EditText)findViewById(R.id.editText3);
+			timezone_field.setEnabled(!((CheckBox)v).isChecked());
+				
+			}
+	};
 }
