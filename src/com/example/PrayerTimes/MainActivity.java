@@ -344,8 +344,8 @@ public class MainActivity extends Activity {
 		Profile profile = new Profile();
 		SharedPreferences settings  = getSharedPreferences(PREFS_NAME, 0);
 
-		profile.savedLatitude = (double)	settings.getFloat("savedLatitude", 0);
-		profile.savedLongitude = (double) 	settings.getFloat("savedLongitude", 0);
+		profile.savedLatitude =  Double.parseDouble(settings.getString("savedLatitude", "0"));
+		profile.savedLongitude = Double.parseDouble(settings.getString("savedLongitude", "0"));
 		profile.savedTimezone = settings.getInt("savedTimezone", 0);
 		profile.cityName = settings.getString("cityName", "Unnammed City");
 		profile.useGPS = settings.getBoolean("useGPS", false);
@@ -356,8 +356,8 @@ public class MainActivity extends Activity {
 	public void saveSettings(Profile profile){
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putFloat("savedLatitude", (float)(profile.savedLatitude));
-		editor.putFloat("savedLongitude", (float)(profile.savedLongitude));
+		editor.putString("savedLatitude", ""+profile.savedLatitude);
+		editor.putString("savedLongitude", ""+profile.savedLongitude);
 		editor.putInt("savedTimezone", profile.savedTimezone);
 		editor.putString("cityName", profile.cityName);
 		editor.putBoolean("useGPS", profile.useGPS);
