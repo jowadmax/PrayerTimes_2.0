@@ -65,6 +65,11 @@ public class MainActivity extends Activity {
 		prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
 		prayersList.add(new Prayer(0, "noCalc", "Midnight"));
 
+		//Set today's date into the blob.
+		myTimeCalculator.mySettings.year = cyear;
+		myTimeCalculator.mySettings.month = cmonth+1;
+		myTimeCalculator.mySettings.day = cday;
+
 		Button locOnMapButton = (Button)findViewById(R.id.button1);
 		locOnMapButton.setOnClickListener(locOnMapButtonListener);
 
@@ -109,36 +114,39 @@ public class MainActivity extends Activity {
 
 
 		//Calculate the prayer times for the PrayersList and display them on the WeatherList
+		applyProfile(mainProfile);
 		calculateAndDisplay(prayersList);
 
 	} //END OF OnCreate
 
 	public void calculateAndDisplay(ArrayList<Prayer> prayersList){
-		// Calculate prayer times and store them inside the objects
-		myTimeCalculator.getTimes(prayersList);
+		if(myTimeCalculator.mySettings.latitude != 0.0 || myTimeCalculator.mySettings.latitude != 0.0){ //Don't calculate on 0,0
+			// Calculate prayer times and store them inside the objects
+			myTimeCalculator.getTimes(prayersList);
 
-		//Calculate time for midnight  { Midnight = Sunset + (Sunset-Fajr)/2 }
-		prayersList.get(5).prayerTime = prayersList.get(3).prayerTime + (prayersList.get(0).prayerTime-prayersList.get(3).prayerTime)/2;  
+			//Calculate time for midnight  { Midnight = Sunset + (Sunset-Fajr)/2 }
+			prayersList.get(5).prayerTime = prayersList.get(3).prayerTime + (prayersList.get(0).prayerTime-prayersList.get(3).prayerTime)/2;  
 
-		// Loop over the objects showing their times
-		/*for(int index=0;index<5;index++)
+			// Loop over the objects showing their times
+			/*for(int index=0;index<5;index++)
 			Toast.makeText(getApplicationContext(), ""+ prayersList.get(index).name + " prayer time is : " + myTimeCalculator.pretty(prayersList.get(index).prayerTime),Toast.LENGTH_LONG).show();
-		 */
+			 */
 
-		final Weather weather_data[] = new Weather[]
-				{
-				new Weather(R.drawable.fajr, "Fajr",		myTimeCalculator.pretty(prayersList.get(0).prayerTime)),
-				new Weather(R.drawable.sunrise, "Sunrise",	myTimeCalculator.pretty(prayersList.get(1).prayerTime)),
-				new Weather(R.drawable.duhr, "Duhr",		myTimeCalculator.pretty(prayersList.get(2).prayerTime)),
-				new Weather(R.drawable.sunset, "Sunset",	myTimeCalculator.pretty(prayersList.get(3).prayerTime)),
-				new Weather(R.drawable.maghrib, "Maghrib",	myTimeCalculator.pretty(prayersList.get(4).prayerTime)),
-				new Weather(R.drawable.midnight, "Midnight",myTimeCalculator.pretty(prayersList.get(5).prayerTime))
-				};
-		WeatherAdapter adapter = new WeatherAdapter(com.example.PrayerTimes.MainActivity.this, 
-				R.layout.listview_item_row, weather_data);
+			final Weather weather_data[] = new Weather[]
+					{
+					new Weather(R.drawable.fajr, "Fajr",		myTimeCalculator.pretty(prayersList.get(0).prayerTime)),
+					new Weather(R.drawable.sunrise, "Sunrise",	myTimeCalculator.pretty(prayersList.get(1).prayerTime)),
+					new Weather(R.drawable.duhr, "Duhr",		myTimeCalculator.pretty(prayersList.get(2).prayerTime)),
+					new Weather(R.drawable.sunset, "Sunset",	myTimeCalculator.pretty(prayersList.get(3).prayerTime)),
+					new Weather(R.drawable.maghrib, "Maghrib",	myTimeCalculator.pretty(prayersList.get(4).prayerTime)),
+					new Weather(R.drawable.midnight, "Midnight",myTimeCalculator.pretty(prayersList.get(5).prayerTime))
+					};
+			WeatherAdapter adapter = new WeatherAdapter(com.example.PrayerTimes.MainActivity.this, 
+					R.layout.listview_item_row, weather_data);
 
-		prayersListView = (ListView)findViewById(R.id.listView1);
-		prayersListView.setAdapter(adapter);
+			prayersListView = (ListView)findViewById(R.id.listView1);
+			prayersListView.setAdapter(adapter);
+		}
 	}
 
 	// Buttons and other elements' functions
@@ -216,6 +224,7 @@ public class MainActivity extends Activity {
 			EditText longit = (EditText)findViewById(R.id.editText2);
 			longit.setEnabled(!((CheckBox)v).isChecked());
 
+			calculateAndDisplay(prayersList);
 		}
 	};
 	View.OnClickListener timezoneCheckBoxListener = new View.OnClickListener() {
