@@ -307,7 +307,7 @@ public class MainActivity extends Activity {
 	}
 	private class MyLocationListener implements LocationListener{
 		public void onLocationChanged(Location location) {  
-			if(mainProfile.useGPS){
+			if(mainProfile.useGPS == true){
 				mainProfile.savedLongitude = location.getLongitude();
 				mainProfile.savedLatitude = location.getLatitude();
 
