@@ -3,6 +3,7 @@ package com.example.PrayerTimes;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -44,8 +45,14 @@ public class MainActivity extends Activity {
 
 	String city_string="Arlington, VA";
 
+	boolean myLocShown = false;
+	Dialog mainDialog; 
+	
+	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -150,27 +157,34 @@ public class MainActivity extends Activity {
 	}
 
 	// Buttons and other elements' functions
+
 	View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
+			
+			if(myLocShown == false ){
+				final Dialog dialog = new Dialog(MainActivity.this);
+				dialog.setContentView(R.layout.maindialog);
 
-			final Dialog dialog = new Dialog(MainActivity.this);
+				dialog.setTitle("Your location:");
+				dialog.setCancelable(true);
+				mainDialog = dialog;
 
-			dialog.setContentView(R.layout.maindialog);
-			dialog.setTitle("Choose Timezone:");
-			dialog.setCancelable(true);
+				//set up button
+				Button button = (Button) dialog.findViewById(R.id.Button01);
+				View.OnClickListener buttonListener = new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mainDialog.dismiss();
+					}
+				};
+				button.setOnClickListener(buttonListener);
+			}
 
-			//set up button
-			Button button = (Button) dialog.findViewById(R.id.Button01);
-			View.OnClickListener buttonListener = new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			}; 
-			button.setOnClickListener(buttonListener);
 
 			//now that the dialog is set up, it's time to show it    
-			dialog.show();
+			myLocShown= true;
+			mainDialog.show();
+
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
