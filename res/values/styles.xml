@@ -1,6 +1,7 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />
-    <item name="android:backgroundDimEnabled">false</item>
+    <style name="AppTheme" parent="android:Theme.Light">
+        <item name="android:backgroundDimEnabled">false</item>
+        /></style>
 
 </resources>
