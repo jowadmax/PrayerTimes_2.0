@@ -81,7 +81,9 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 		LatLng myPos = new LatLng(params.getDouble("latitude"), params.getDouble("longitude"));
 		//Add marker, moveCamera, and setZoom
 		mMap.addMarker(new MarkerOptions().position(myPos).title("You are here"));
-		mMap.moveCamera(CameraUpdateFactory.newLatLng(myPos));
+		//Set zoom level to 15 if the position is not 0,0
+		if(myPos.latitude != 0 || myPos.longitude!=0)
+			mMap.moveCamera(CameraUpdateFactory.newLatLng(myPos));
 		mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
 		//Setup the click listeners
