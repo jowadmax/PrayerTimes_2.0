@@ -380,6 +380,7 @@ public class MainActivity extends Activity  {
 
 			applyProfile(mainProfile);
 			saveSettings(mainProfile);
+			calculateAndDisplay(prayersList);
 		}
 	}
 }
