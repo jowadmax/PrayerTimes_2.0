@@ -1,8 +1,8 @@
 package com.example.PrayerTimes;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -17,7 +18,8 @@ import android.view.View;
  * Notice how we deal with the possibility that the Google Play services APK is not
  * installed/enabled/updated on a user's device.
  */
-public class MapActivity extends FragmentActivity {
+public class MapActivity extends FragmentActivity implements OnMapLongClickListener{
+	
     /**
      * Note that this may be null if the Google Play services APK is not available.
      */
@@ -79,9 +81,21 @@ public class MapActivity extends FragmentActivity {
     	mMap.addMarker(new MarkerOptions().position(myPos).title("You are here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPos));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        
+        //Setup the click listeners
+        mMap.setOnMapLongClickListener(this);
+        
+        //Show help
+		Toast.makeText(this, "Press and hold on the map to get the position.",Toast.LENGTH_LONG).show();
     }
     
     public void onCancel(View view){
     	this.finish();
-     } 
+     }
+    
+	@Override
+	public void onMapLongClick(LatLng point) {
+    	mMap.clear();
+    	mMap.addMarker(new MarkerOptions().position(point).title("New position"));
+	}  
 }
