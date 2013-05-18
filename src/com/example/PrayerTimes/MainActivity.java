@@ -189,20 +189,6 @@ public class MainActivity extends Activity  {
 			mainProfile.useGPS = ((CheckBox)v).isChecked();
 			saveSettings(mainProfile);
 
-			if(mainProfile.useGPS == true)
-				setupGPS();
-			else
-			{
-				locationManager.removeUpdates(locationListener);
-			}
-
-			EditText latit = (EditText)findViewById(R.id.editText1);
-			latit.setEnabled(!((CheckBox)v).isChecked());
-
-
-			EditText longit = (EditText)findViewById(R.id.editText2);
-			longit.setEnabled(!((CheckBox)v).isChecked());
-
 			calculateAndDisplay(prayersList);
 		}
 	};
@@ -366,6 +352,15 @@ public class MainActivity extends Activity  {
 			profile.savedTimezone = getTimezone();
 			saveSettings(profile);
 		}
+		
+		//GPS listener enable/disable depending on profile.useGPS 
+		if(mainProfile.useGPS == true)
+			setupGPS();
+		else
+		{
+			locationManager.removeUpdates(locationListener);
+		}
+
 	}
 
 	// After map activity is finished
