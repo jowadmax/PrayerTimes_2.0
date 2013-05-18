@@ -295,7 +295,7 @@ public class MainActivity extends Activity  {
 		profile.savedLongitude = Double.parseDouble(settings.getString("savedLongitude", "0"));
 		profile.savedTimezone = settings.getInt("savedTimezone", 0);
 		profile.cityName = settings.getString("cityName", "Unnammed City");
-		profile.useGPS = settings.getBoolean("useGPS", false);
+		profile.useGPS = settings.getBoolean("useGPS", true);
 		profile.useTimezone = settings.getBoolean("useTimezone", true);
 
 		return profile;
