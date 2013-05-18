@@ -60,11 +60,6 @@ public class MainActivity extends Activity  {
 		//Load Settings into main Profile
 		mainProfile = loadSettings();
 
-
-		//Setup GPS
-		if(mainProfile.useGPS)
-			setupGPS();
-
 		//Add prayer objects to the prayersList
 		prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
 		prayersList.add(new Prayer(-0.83, "exact", "Sunrise"));
@@ -344,6 +339,7 @@ public class MainActivity extends Activity  {
 		EditText timezoneEditText = (EditText)findViewById(R.id.editText3);
 
 		timezoneEditText.setEnabled(!profile.useTimezone);
+		
 		if(profile.useTimezone == false)
 			timezoneEditText.setText(""+profile.savedTimezone);
 		else
@@ -358,7 +354,8 @@ public class MainActivity extends Activity  {
 			setupGPS();
 		else
 		{
-			locationManager.removeUpdates(locationListener);
+			if(locationManager!=null && locationListener!=null)
+				locationManager.removeUpdates(locationListener);
 		}
 
 	}
