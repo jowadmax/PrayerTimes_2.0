@@ -9,13 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class WeatherAdapter extends ArrayAdapter<Weather>{
+public class PrayersListAdapter extends ArrayAdapter<PrayerItem>{
 
     Context context; 
     int layoutResourceId;    
-    Weather data[] = null;
+    PrayerItem data[] = null;
     
-    public WeatherAdapter(Context context, int layoutResourceId, Weather[] data) {
+    public PrayersListAdapter(Context context, int layoutResourceId, PrayerItem[] data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -44,7 +44,7 @@ public class WeatherAdapter extends ArrayAdapter<Weather>{
             holder = (WeatherHolder)row.getTag();
         }
         
-        Weather weather = data[position];
+        PrayerItem weather = data[position];
         holder.txtTitle.setText(weather.title);
         holder.txtTime.setText(weather.time);
         holder.imgIcon.setImageResource(weather.icon);

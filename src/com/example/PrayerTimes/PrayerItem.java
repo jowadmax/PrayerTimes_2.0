@@ -1,13 +1,13 @@
 package com.example.PrayerTimes;
-public class Weather {
+public class PrayerItem {
     public int icon;
     public String title;
     public String time;
-    public Weather(){
+    public PrayerItem(){
         super();
     }
     
-    public Weather(int icon, String title, String time) {
+    public PrayerItem(int icon, String title, String time) {
         super();
         this.icon = icon;
         this.title = title;

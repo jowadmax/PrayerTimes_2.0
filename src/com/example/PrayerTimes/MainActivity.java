@@ -120,7 +120,7 @@ public class MainActivity extends Activity  {
 		}
 
 
-		//Calculate the prayer times for the PrayersList and display them on the WeatherList
+		//Calculate the prayer times for the PrayersList and display them on the PrayerList
 		applyProfile(mainProfile);
 		calculateAndDisplay(prayersList);
 
@@ -139,17 +139,17 @@ public class MainActivity extends Activity  {
 			Toast.makeText(getApplicationContext(), ""+ prayersList.get(index).name + " prayer time is : " + myTimeCalculator.pretty(prayersList.get(index).prayerTime),Toast.LENGTH_LONG).show();
 			 */
 
-			final Weather weather_data[] = new Weather[]
+			final PrayerItem prayer_data[] = new PrayerItem[]
 					{
-					new Weather(R.drawable.fajr, "Fajr",		myTimeCalculator.pretty(prayersList.get(0).prayerTime)),
-					new Weather(R.drawable.sunrise, "Sunrise",	myTimeCalculator.pretty(prayersList.get(1).prayerTime)),
-					new Weather(R.drawable.duhr, "Duhr",		myTimeCalculator.pretty(prayersList.get(2).prayerTime)),
-					new Weather(R.drawable.sunset, "Sunset",	myTimeCalculator.pretty(prayersList.get(3).prayerTime)),
-					new Weather(R.drawable.maghrib, "Maghrib",	myTimeCalculator.pretty(prayersList.get(4).prayerTime)),
-					new Weather(R.drawable.midnight, "Midnight",myTimeCalculator.pretty(prayersList.get(5).prayerTime))
+					new PrayerItem(R.drawable.fajr, "Fajr",		myTimeCalculator.pretty(prayersList.get(0).prayerTime)),
+					new PrayerItem(R.drawable.sunrise, "Sunrise",	myTimeCalculator.pretty(prayersList.get(1).prayerTime)),
+					new PrayerItem(R.drawable.duhr, "Duhr",		myTimeCalculator.pretty(prayersList.get(2).prayerTime)),
+					new PrayerItem(R.drawable.sunset, "Sunset",	myTimeCalculator.pretty(prayersList.get(3).prayerTime)),
+					new PrayerItem(R.drawable.maghrib, "Maghrib",	myTimeCalculator.pretty(prayersList.get(4).prayerTime)),
+					new PrayerItem(R.drawable.midnight, "Midnight",myTimeCalculator.pretty(prayersList.get(5).prayerTime))
 					};
-			WeatherAdapter adapter = new WeatherAdapter(com.example.PrayerTimes.MainActivity.this, 
-					R.layout.listview_item_row, weather_data);
+			PrayersListAdapter adapter = new PrayersListAdapter(com.example.PrayerTimes.MainActivity.this, 
+					R.layout.listview_item_row, prayer_data);
 
 			prayersListView = (ListView)findViewById(R.id.listView1);
 			prayersListView.setAdapter(adapter);
@@ -183,7 +183,7 @@ public class MainActivity extends Activity  {
 					myTimeCalculator.mySettings.month = cmonth+1;
 					myTimeCalculator.mySettings.day = cday;
 
-					//Calculate the new prayer times for the updated PrayersList and display them on the WeatherList
+					//Calculate the new prayer times for the updated PrayersList and display them on the PrayersList
 					calculateAndDisplay(prayersList);                    
 
 				}
