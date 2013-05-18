@@ -88,37 +88,22 @@ public class MainActivity extends Activity  {
 		//Define the GPS checkBox
 		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
 		gpsCheckBox.setOnClickListener(gpsCheckBoxListener);
-		gpsCheckBox.setChecked(mainProfile.useGPS);
+
 
 		//Define the TimeZone checkbox
 		CheckBox timezoneCheckBox = (CheckBox)findViewById(R.id.checkBox2);
 		timezoneCheckBox.setOnClickListener(timezoneCheckBoxListener);
-		timezoneCheckBox.setChecked(mainProfile.useTimezone);
+
 
 		//Setup the EditTexts
 		EditText latit = (EditText)findViewById(R.id.editText1);
 		latit.setOnFocusChangeListener(EditBoxesListener);
-		latit.setEnabled(!mainProfile.useGPS);
-		if(mainProfile.useGPS == false)
-			latit.setText(""+mainProfile.savedLatitude);
 
 		EditText longit = (EditText)findViewById(R.id.editText2);
 		longit.setOnFocusChangeListener(EditBoxesListener);
-		longit.setEnabled(!mainProfile.useGPS);
-		if(mainProfile.useGPS == false)
-			longit.setText(""+mainProfile.savedLongitude);
 
 		EditText timezoneEditText = (EditText)findViewById(R.id.editText3);
 		timezoneEditText.setOnFocusChangeListener(EditBoxesListener);
-		timezoneEditText.setEnabled(!mainProfile.useTimezone);
-		if(mainProfile.useTimezone == false)
-			timezoneEditText.setText(""+mainProfile.savedTimezone);
-		else
-		{ 
-			timezoneEditText.setText(""+getTimezone());
-			mainProfile.savedTimezone = getTimezone();
-			saveSettings(mainProfile);
-		}
 
 
 		//Calculate the prayer times for the PrayersList and display them on the PrayerList
@@ -226,18 +211,7 @@ public class MainActivity extends Activity  {
 		@Override
 		public void onClick(View v) {
 			mainProfile.useTimezone = ((CheckBox)v).isChecked();
-			saveSettings(mainProfile);
-
-			EditText timezone_field = (EditText)findViewById(R.id.editText3);
-
-			timezone_field.setEnabled(!mainProfile.useTimezone);
-
-			if( mainProfile.useTimezone ){
-				timezone_field.setText(""+getTimezone());
-			}
-
-			//Set timeZone to the value in the timezone editBox
-			mainProfile.savedTimezone = Integer.parseInt(timezone_field.getText().toString());
+			
 			applyProfile(mainProfile);
 			saveSettings(mainProfile);
 
@@ -308,12 +282,6 @@ public class MainActivity extends Activity  {
 				applyProfile(mainProfile); //Save changes to mySettings too
 				saveSettings(mainProfile);
 
-				EditText latit = (EditText)findViewById(R.id.editText1);
-				EditText longit = (EditText)findViewById(R.id.editText2);
-
-				latit.setText(""+myTimeCalculator.mySettings.latitude);
-				longit.setText(""+myTimeCalculator.mySettings.longitude);
-
 				String message = String.format(  
 						"New Location : \n Longitude: %1$s \n Latitude: %2$s\n Recalculating...",  
 						myTimeCalculator.mySettings.longitude, myTimeCalculator.mySettings.latitude);
@@ -367,9 +335,37 @@ public class MainActivity extends Activity  {
 		return (int)tz;
 	}
 	public void applyProfile(Profile profile){
+		//Set the calculator values from this profile
 		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
 		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
 		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
+		
+		//Set up the GUI from this profile
+		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
+		gpsCheckBox.setChecked(profile.useGPS);
+
+		CheckBox timezoneCheckBox = (CheckBox)findViewById(R.id.checkBox2);
+		timezoneCheckBox.setChecked(profile.useTimezone);
+
+		EditText latit = (EditText)findViewById(R.id.editText1);
+		latit.setEnabled(!profile.useGPS);
+		latit.setText(""+profile.savedLatitude);
+
+		EditText longit = (EditText)findViewById(R.id.editText2);
+		longit.setEnabled(!profile.useGPS);
+		longit.setText(""+profile.savedLongitude);
+
+		EditText timezoneEditText = (EditText)findViewById(R.id.editText3);
+
+		timezoneEditText.setEnabled(!profile.useTimezone);
+		if(profile.useTimezone == false)
+			timezoneEditText.setText(""+profile.savedTimezone);
+		else
+		{ 
+			timezoneEditText.setText(""+getTimezone());
+			profile.savedTimezone = getTimezone();
+			saveSettings(profile);
+		}
 	}
 
 	// After map activity is finished
