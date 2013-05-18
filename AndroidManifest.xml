@@ -20,6 +20,11 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity
+      android:name=".BasicMapActivity"
+      android:theme="@style/CustomDialogTheme"
+      android:label="Basic Map"/>
+		
 		<meta-data android:name="com.google.android.maps.v2.API_KEY"
 			android:value="AIzaSyCgTNdnw318p9ceJvjo5TaP4sToBVMyzvU" />
 	</application>
