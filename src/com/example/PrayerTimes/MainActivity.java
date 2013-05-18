@@ -160,7 +160,10 @@ public class MainActivity extends Activity  {
 
 	View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			startActivity(new Intent(getBaseContext(), MapActivity.class));
+			Intent mapIntent = new Intent(getBaseContext(), MapActivity.class);
+			mapIntent.putExtra("latitude",myTimeCalculator.mySettings.latitude);
+			mapIntent.putExtra("longitude",myTimeCalculator.mySettings.longitude);
+			startActivity(mapIntent);
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
