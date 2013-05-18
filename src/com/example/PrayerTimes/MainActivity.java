@@ -8,11 +8,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity  {
 
 	public static final String PREFS_NAME = "MyPrefsFile"; //Preferences tag
 	private ListView prayersListView;  //Main prayers list
@@ -47,7 +47,6 @@ public class MainActivity extends Activity {
 
 	boolean myLocShown = false;
 	Dialog mainDialog; 
-	
 	
 
 	@Override
