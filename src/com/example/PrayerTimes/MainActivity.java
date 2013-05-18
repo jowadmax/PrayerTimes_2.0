@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -159,31 +160,7 @@ public class MainActivity extends FragmentActivity  {
 
 	View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			
-			if(myLocShown == false ){
-				final Dialog dialog = new Dialog(MainActivity.this);
-				dialog.setContentView(R.layout.maindialog);
-
-				dialog.setTitle("Your location:");
-				dialog.setCancelable(true);
-				mainDialog = dialog;
-
-				//set up button
-				Button button = (Button) dialog.findViewById(R.id.Button01);
-				View.OnClickListener buttonListener = new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mainDialog.dismiss();
-					}
-				};
-				button.setOnClickListener(buttonListener);
-			}
-
-
-			//now that the dialog is set up, it's time to show it    
-			myLocShown= true;
-			mainDialog.show();
-
+			startActivity(new Intent(getBaseContext(), BasicMapActivity.class));
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
