@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -87,6 +88,10 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
         
         //Show help
 		Toast.makeText(this, "Press and hold on the map to get the position.",Toast.LENGTH_LONG).show();
+		
+    	//Refresh the location label
+    	TextView label = (TextView)findViewById(R.id.textView1);
+    	label.setText(String.format("Location: Latitude: %.5f Longitude: %.5f",myPos.latitude,myPos.longitude));
     }
     
     public void onCancel(View view){
@@ -97,5 +102,10 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 	public void onMapLongClick(LatLng point) {
     	mMap.clear();
     	mMap.addMarker(new MarkerOptions().position(point).title("New position"));
+
+    	//Refresh the location label
+    	TextView label = (TextView)findViewById(R.id.textView1);
+    	label.setText(String.format("Location: Latitude: %.5f Longitude: %.5f",point.latitude,point.longitude));
+    	
 	}  
 }
