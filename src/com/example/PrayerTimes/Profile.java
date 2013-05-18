@@ -2,10 +2,10 @@ package com.example.PrayerTimes;
 
 public class Profile {
 	double 	savedLatitude,
-			savedLongitude;
+	savedLongitude;
 	int		savedTimezone;
 	String	cityName;
 	boolean	useGPS,
-			useTimezone;
+	useTimezone;
 
 }

@@ -14,7 +14,6 @@
         android:layout_below="@+id/button5"
         android:layout_marginBottom="15dp"
         android:scrollbarStyle="insideOverlay" >
-
     </ListView>
 
     <TextView
@@ -53,7 +52,6 @@
         android:layout_toLeftOf="@+id/checkBox1"
         android:layout_toRightOf="@+id/textView2"
         android:background="@drawable/textview"
-        android:editable="true"
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
         android:maxLines="1"
