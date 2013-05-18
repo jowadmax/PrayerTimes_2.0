@@ -14,7 +14,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -49,7 +48,7 @@ public class MainActivity extends Activity  {
 
 	boolean myLocShown = false;
 	Dialog mainDialog; 
-	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +192,7 @@ public class MainActivity extends Activity  {
 		@Override
 		public void onClick(View v) {
 			mainProfile.useTimezone = ((CheckBox)v).isChecked();
-			
+
 			applyProfile(mainProfile);
 			saveSettings(mainProfile);
 
@@ -261,7 +260,7 @@ public class MainActivity extends Activity  {
 		public void onLocationChanged(Location location) {  
 			if(		mainProfile.useGPS == true && 
 					!(location.getLongitude() == mainProfile.savedLongitude && location.getLatitude() == mainProfile.savedLatitude)
-				){
+					){
 				mainProfile.savedLongitude = location.getLongitude();
 				mainProfile.savedLatitude = location.getLatitude();
 
@@ -325,7 +324,7 @@ public class MainActivity extends Activity  {
 		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
 		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
 		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
-		
+
 		//Set up the GUI from this profile
 		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
 		gpsCheckBox.setChecked(profile.useGPS);
@@ -344,7 +343,7 @@ public class MainActivity extends Activity  {
 		EditText timezoneEditText = (EditText)findViewById(R.id.editText3);
 
 		timezoneEditText.setEnabled(!profile.useTimezone);
-		
+
 		if(profile.useTimezone == false)
 			timezoneEditText.setText(""+profile.savedTimezone);
 		else
@@ -353,7 +352,7 @@ public class MainActivity extends Activity  {
 			profile.savedTimezone = getTimezone();
 			saveSettings(profile);
 		}
-		
+
 		//GPS listener enable/disable depending on profile.useGPS 
 		if(profile.useGPS == true)
 			setupGPS();
@@ -372,15 +371,15 @@ public class MainActivity extends Activity  {
 		// Get its data parameters
 		Bundle params = data.getExtras();
 		// Check the 'result' entry for 'ok' or 'cancelled'
-    	String result = params.getString("result");
-    	//Apply the new coordinates to the current profile and the GUI
-    	if(result.equals("ok")){
-    		mainProfile.useGPS = false;
-    		mainProfile.savedLatitude = params.getDouble("latitude");
-    		mainProfile.savedLongitude = params.getDouble("longitude");
-    		
-    		applyProfile(mainProfile);
-    		saveSettings(mainProfile);
-    	}
+		String result = params.getString("result");
+		//Apply the new coordinates to the current profile and the GUI
+		if(result.equals("ok")){
+			mainProfile.useGPS = false;
+			mainProfile.savedLatitude = params.getDouble("latitude");
+			mainProfile.savedLongitude = params.getDouble("longitude");
+
+			applyProfile(mainProfile);
+			saveSettings(mainProfile);
+		}
 	}
 }
