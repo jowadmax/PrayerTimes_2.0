@@ -1,5 +1,7 @@
 package com.example.PrayerTimes;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -69,7 +71,14 @@ public class MapActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    	//Get the Lat, Long sent from MainActivity
+    	Bundle params = getIntent().getExtras();
+    	//Set them as myPos
+    	LatLng myPos = new LatLng(params.getDouble("latitude"), params.getDouble("longitude"));
+    	//Add marker, moveCamera, and setZoom
+    	mMap.addMarker(new MarkerOptions().position(myPos).title("You are here"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPos));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
     
     public void onCancel(View view){
