@@ -160,7 +160,7 @@ public class MainActivity extends FragmentActivity  {
 
 	View.OnClickListener locOnMapButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			startActivity(new Intent(getBaseContext(), BasicMapActivity.class));
+			startActivity(new Intent(getBaseContext(), MapActivity.class));
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {

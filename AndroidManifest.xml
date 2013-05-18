@@ -21,7 +21,7 @@
 			</intent-filter>
 		</activity>
 		<activity
-      android:name=".BasicMapActivity"
+      android:name=".MapActivity"
       android:theme="@style/CustomDialogTheme"
       android:label="Basic Map"/>
 		

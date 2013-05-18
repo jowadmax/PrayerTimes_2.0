@@ -15,7 +15,7 @@ import android.view.View;
  * Notice how we deal with the possibility that the Google Play services APK is not
  * installed/enabled/updated on a user's device.
  */
-public class BasicMapActivity extends FragmentActivity {
+public class MapActivity extends FragmentActivity {
     /**
      * Note that this may be null if the Google Play services APK is not available.
      */
@@ -74,5 +74,5 @@ public class BasicMapActivity extends FragmentActivity {
     
     public void onCancel(View view){
     	this.finish();
-    } 
+     } 
 }
