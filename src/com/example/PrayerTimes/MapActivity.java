@@ -88,7 +88,7 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
         mMap.setOnMapLongClickListener(this);
         
         //Show help
-		Toast.makeText(this, "Press and hold on the map to get the position.",Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Press and hold on the map to set position.",Toast.LENGTH_LONG).show();
 		
     	//Refresh the location label
     	TextView label = (TextView)findViewById(R.id.textView1);

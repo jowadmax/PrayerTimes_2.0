@@ -373,12 +373,14 @@ public class MainActivity extends Activity  {
 		Bundle params = data.getExtras();
 		// Check the 'result' entry for 'ok' or 'cancelled'
     	String result = params.getString("result");
-
+    	//Apply the new coordinates to the current profile and the GUI
     	if(result.equals("ok")){
-    		Log.v("MyActivity", "Pressed OK with Long: " + params.getDouble("longitude")+" and Lat: "+params.getDouble("latitude"));
-    	}
-    	else {
-    		Log.v("MyActivity", "Pressed Cancel ");
+    		mainProfile.useGPS = false;
+    		mainProfile.savedLatitude = params.getDouble("latitude");
+    		mainProfile.savedLongitude = params.getDouble("longitude");
+    		
+    		applyProfile(mainProfile);
+    		saveSettings(mainProfile);
     	}
 	}
 }
