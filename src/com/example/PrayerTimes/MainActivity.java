@@ -33,7 +33,7 @@ public class MainActivity extends Activity  {
 	private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 2000; // in Meters  
 	private static final long MINIMUM_TIME_BETWEEN_UPDATES = 10000; // in Milliseconds
 	protected LocationManager locationManager;
-	public MyLocationListener locationListener = new MyLocationListener();
+	public MyLocationListener locationListener;
 
 	// Get today's date
 	int cyear = now.get(Calendar.YEAR);
@@ -182,6 +182,7 @@ public class MainActivity extends Activity  {
 		public void onClick(View v) {
 
 			mainProfile.useGPS = ((CheckBox)v).isChecked();
+			applyProfile(mainProfile);
 			saveSettings(mainProfile);
 
 			calculateAndDisplay(prayersList);
@@ -227,9 +228,11 @@ public class MainActivity extends Activity  {
 	};
 
 	public void setupGPS(){
-
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MINIMUM_TIME_BETWEEN_UPDATES,MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,locationListener);
+		if(locationListener == null){
+			locationListener = new MyLocationListener();
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MINIMUM_TIME_BETWEEN_UPDATES,MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,locationListener);
+		}
 
 		/*List<String> providers =locationManager.getProviders(true);
 
@@ -350,12 +353,14 @@ public class MainActivity extends Activity  {
 		}
 		
 		//GPS listener enable/disable depending on profile.useGPS 
-		if(mainProfile.useGPS == true)
+		if(profile.useGPS == true)
 			setupGPS();
 		else
 		{
 			if(locationManager!=null && locationListener!=null)
 				locationManager.removeUpdates(locationListener);
+			locationListener = null;
+			System.gc();
 		}
 
 	}
