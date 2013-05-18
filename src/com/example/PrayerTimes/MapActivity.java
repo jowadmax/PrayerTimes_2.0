@@ -7,6 +7,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -95,6 +96,15 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
     }
     
     public void onCancel(View view){
+    	Intent mapIntent = getIntent();
+		mapIntent.putExtra("result","cancelled");
+		setResult(0,mapIntent);
+    	this.finish();
+     }
+    public void onOK(View view){
+    	Intent mapIntent = getIntent();
+		mapIntent.putExtra("result","ok");
+		setResult(0,mapIntent);
     	this.finish();
      }
     
@@ -106,6 +116,11 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
     	//Refresh the location label
     	TextView label = (TextView)findViewById(R.id.textView1);
     	label.setText(String.format("Location: Latitude: %.5f Longitude: %.5f",point.latitude,point.longitude));
+
+    	//Save the point to the intent data
+    	Intent mapIntent = getIntent();
+		mapIntent.putExtra("latitude",point.latitude);
+		mapIntent.putExtra("longitude",point.longitude);
     	
 	}  
 }

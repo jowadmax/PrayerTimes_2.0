@@ -14,6 +14,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -163,7 +164,7 @@ public class MainActivity extends Activity  {
 			Intent mapIntent = new Intent(getBaseContext(), MapActivity.class);
 			mapIntent.putExtra("latitude",myTimeCalculator.mySettings.latitude);
 			mapIntent.putExtra("longitude",myTimeCalculator.mySettings.longitude);
-			startActivity(mapIntent);
+			startActivityForResult(mapIntent,0);
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
@@ -369,5 +370,20 @@ public class MainActivity extends Activity  {
 		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
 		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
 		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
+	}
+
+	// After map activity is finished
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Get its data parameters
+		Bundle params = data.getExtras();
+		// Check the 'result' entry for 'ok' or 'cancelled'
+    	String result = params.getString("result");
+
+    	if(result.equals("ok")){
+    		Log.v("MyActivity", "Pressed OK with Long: " + params.getDouble("longitude")+" and Lat: "+params.getDouble("latitude"));
+    	}
+    	else {
+    		Log.v("MyActivity", "Pressed Cancel ");
+    	}
 	}
 }

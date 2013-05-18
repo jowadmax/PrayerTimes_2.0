@@ -51,7 +51,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/button_menu"
             android:gravity="center"
-            android:onClick="onCancel"
+            android:onClick="onOK"
             android:text="@string/ok_text" />
 
         <Button
