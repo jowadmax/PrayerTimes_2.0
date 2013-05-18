@@ -65,7 +65,6 @@
             android:gravity="center"
             android:onClick="onCancel"
             android:text="@string/cancel_text" />
-
     </LinearLayout>
 
 </RelativeLayout>

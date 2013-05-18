@@ -4,10 +4,9 @@
         <item name="android:backgroundDimEnabled">false</item>
         /></style>
 
-        <style name="CustomDialogTheme" parent="android:Theme.Dialog">
+    <style name="CustomDialogTheme" parent="android:Theme.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowNoTitle">true</item>
-        />
-</style>
+        /></style>
 
 </resources>
