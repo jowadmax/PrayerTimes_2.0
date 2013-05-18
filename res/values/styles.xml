@@ -6,6 +6,7 @@
 
         <style name="CustomDialogTheme" parent="android:Theme.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
         />
 </style>
 
