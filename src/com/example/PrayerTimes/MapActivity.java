@@ -123,4 +123,8 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 		mapIntent.putExtra("longitude",point.longitude);
 
 	}  
+	@Override
+	public void onBackPressed() {
+		onCancel(null);
+	}
 }
