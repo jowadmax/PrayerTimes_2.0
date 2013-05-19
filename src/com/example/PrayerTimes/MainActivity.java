@@ -74,6 +74,12 @@ public class MainActivity extends Activity  {
 
 		Button locOnMapButton = (Button)findViewById(R.id.button1);
 		locOnMapButton.setOnClickListener(locOnMapButtonListener);
+		
+		Button saveCityButton = (Button)findViewById(R.id.button5);
+		saveCityButton.setOnClickListener(saveCityButtonListener);
+		
+		Button loadCityButton = (Button)findViewById(R.id.button4);
+		loadCityButton.setOnClickListener(loadCityButtonListener);
 
 		Button changeDateButton = (Button)findViewById(R.id.button3);
 		changeDateButton.setText("Prayer times table for "+city_string+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
@@ -144,6 +150,22 @@ public class MainActivity extends Activity  {
 			mapIntent.putExtra("latitude",myTimeCalculator.mySettings.latitude);
 			mapIntent.putExtra("longitude",myTimeCalculator.mySettings.longitude);
 			startActivityForResult(mapIntent,0);
+		}
+	};
+	
+	View.OnClickListener saveCityButtonListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
+			mapIntent.putExtra("operationType","save");
+			startActivityForResult(mapIntent,1);
+		}
+	};
+	
+	View.OnClickListener loadCityButtonListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
+			mapIntent.putExtra("operationType","load");
+			startActivityForResult(mapIntent,1);
 		}
 	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
