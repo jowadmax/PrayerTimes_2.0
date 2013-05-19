@@ -2,6 +2,7 @@ package com.example.PrayerTimes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 import android.location.Location;
@@ -157,6 +158,7 @@ public class MainActivity extends Activity  {
 		public void onClick(View v) {
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
 			mapIntent.putExtra("operationType","save");
+			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
 			startActivityForResult(mapIntent,1);
 		}
 	};

@@ -22,6 +22,7 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 	private ListView cityList;
 	private ArrayAdapter<String> cities;
 	String operationType;
+	Profile newProfile = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +54,12 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 		cityList.setOnItemClickListener(this);
 		cityList.setOnItemLongClickListener(this);
         cities = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items.toArray(new String[0]));
-        
-        // By using setAdapter method, you plugged the ListView with adapter
         cityList.setAdapter(cities);
+
+        // If the state is save, then get the mainProfile from MainActivity
+		if(operationType.equals("save"))
+			newProfile = (Profile)params.getParcelableArrayList("profile").get(0);
+
         }
 
 
