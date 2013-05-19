@@ -1,5 +1,7 @@
 package com.example.PrayerTimes;
 
+import java.util.Vector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,18 +17,35 @@ public final class cityManager extends Activity implements OnClickListener, OnCa
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final String[] items = { "Evansville", "Arlington" , "Baghdad"	};
+		// Receive the data passed from MainActivity
+		Bundle params = getIntent().getExtras();
+		String operationType = params.getString("operationType");
 
+		// Construct the cities list
+		Vector<String> items = new Vector<String>();
+		if(operationType.equals("save"))
+			items.add("<New City>");
+		else
+			items.add("<Delete City>");
+		
+		items.add("Evansville");
+		items.add("Arlington");
+		items.add("Baghdad");
+		
+		
 		// Create a blank Dialog Builder
 		AlertDialog.Builder builder = new AlertDialog.Builder(cityManager.this);
 		builder.setOnCancelListener(this);
 
 		// Set the dialog settings
-		builder.setTitle("Choose a City:");
+		if(operationType.equals("save"))
+			builder.setTitle("Choose a city to save to:");
+		else
+			builder.setTitle("Choose a city to load from:");		
 		builder.setCancelable(true);
 
 		// Assign the list and set the OnClickListener method
-		builder.setItems(items, this);
+		builder.setItems(items.toArray(new String[0]), this);
 
 		// Show the dialog
 		AlertDialog alert = builder.create();
