@@ -368,19 +368,22 @@ public class MainActivity extends Activity  {
 
 	// After map activity is finished
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Get its data parameters
-		Bundle params = data.getExtras();
-		// Check the 'result' entry for 'ok' or 'cancelled'
-		String result = params.getString("result");
-		//Apply the new coordinates to the current profile and the GUI
-		if(result.equals("ok")){
-			mainProfile.useGPS = false;
-			mainProfile.savedLatitude = params.getDouble("latitude");
-			mainProfile.savedLongitude = params.getDouble("longitude");
+		//If results came from MapActivity
+		if(requestCode == 0){
+			// Get its data parameters
+			Bundle params = data.getExtras();
+			// Check the 'result' entry for 'ok' or 'cancelled'
+			String result = params.getString("result");
+			//Apply the new coordinates to the current profile and the GUI
+			if(result.equals("ok")){
+				mainProfile.useGPS = false;
+				mainProfile.savedLatitude = params.getDouble("latitude");
+				mainProfile.savedLongitude = params.getDouble("longitude");
 
-			applyProfile(mainProfile);
-			saveSettings(mainProfile);
-			calculateAndDisplay(prayersList);
+				applyProfile(mainProfile);
+				saveSettings(mainProfile);
+				calculateAndDisplay(prayersList);
+			}
 		}
 	}
 }
