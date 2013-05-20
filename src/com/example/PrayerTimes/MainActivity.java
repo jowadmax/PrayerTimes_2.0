@@ -171,6 +171,7 @@ public class MainActivity extends Activity  {
 		public void onClick(View v) {
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
 			mapIntent.putExtra("operationType","load");
+			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
 			startActivityForResult(mapIntent,1);
 		}
 	};

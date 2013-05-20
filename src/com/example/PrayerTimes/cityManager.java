@@ -67,9 +67,8 @@ public final class cityManager extends Activity implements OnItemClickListener, 
         cities = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items.toArray(new String[0]));
         cityList.setAdapter(cities);
 
-        // If the state is save, then get the mainProfile from MainActivity
-		if(operationType.equals("save"))
-			newProfile = (Profile)params.getParcelableArrayList("profile").get(0);
+        // get the mainProfile from MainActivity
+		newProfile = (Profile)params.getParcelableArrayList("profile").get(0);
 
         }
 
@@ -115,8 +114,14 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		String text = (((TextView)(view)).getText()).toString();
 		if(operationType.equals("load") && !(text.equals("<Delete City>"))){
-			db.deleteProfile(""+(((TextView)view).getText()));
-			finish();
+			if(newProfile.cityName.equals(text)){
+				Toast.makeText(getApplicationContext(),"You cannot delete current city, please select another city then delete this.",Toast.LENGTH_LONG).show();
+			}
+			else
+			{
+				db.deleteProfile(""+(((TextView)view).getText()));
+				finish();
+			}
 		}
 
 		return true;
