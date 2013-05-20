@@ -330,28 +330,28 @@ public class MainActivity extends Activity  {
 		}  
 	} 
 	public Profile loadSettings(){
-		Profile profile = new Profile();
+
 		SharedPreferences settings  = getSharedPreferences(PREFS_NAME, 0);
+		Profile profile = new Profile();
 
-		profile.savedLatitude =  Double.parseDouble(settings.getString("savedLatitude", "0"));
-		profile.savedLongitude = Double.parseDouble(settings.getString("savedLongitude", "0"));
-		profile.savedTimezone = settings.getInt("savedTimezone", 0);
-		profile.cityName = settings.getString("cityName", "Unnammed City");
-		profile.useGPS = settings.getBoolean("useGPS", true);
-		profile.useTimezone = settings.getBoolean("useTimezone", true);
+		String lastCity = settings.getString("lastCity", "Unnammed City");
 
-		return profile;
+		if(lastCity.equals("Unnammed City"))
+			return profile;
+		else
+			return db.getProfile(lastCity);
 	}
 	public void saveSettings(Profile profile){
+		//Get shared preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("savedLatitude", ""+profile.savedLatitude);
-		editor.putString("savedLongitude", ""+profile.savedLongitude);
-		editor.putInt("savedTimezone", profile.savedTimezone);
-		editor.putString("cityName", profile.cityName);
-		editor.putBoolean("useGPS", profile.useGPS);
-		editor.putBoolean("useTimezone", profile.useTimezone);
-		editor.commit();
+
+		// if the city is not Unnammed City, update it on db and save its name
+		if(!profile.cityName.equals("Unnammed City")){
+			editor.putString("lastCity", profile.cityName);
+			editor.commit();
+			db.addProfile(profile);
+		}
 	}
 	public int getTimezone(){
 		Calendar c = Calendar.getInstance();
