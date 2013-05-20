@@ -2,6 +2,7 @@ package com.example.PrayerTimes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -44,10 +46,11 @@ public class MainActivity extends Activity  {
 	final ArrayList<Prayer> prayersList = new ArrayList<Prayer>(); //Prayers objects list
 	Profile mainProfile; //Main settings profile
 
-	String city_string="Arlington, VA";
-
 	boolean myLocShown = false;
 	Dialog mainDialog; 
+	Dialog newNameDialog;
+	Dialog dialog;
+	DatabaseHandler db = new DatabaseHandler(this);
 
 
 	@Override
@@ -58,6 +61,9 @@ public class MainActivity extends Activity  {
 
 		//Load Settings into main Profile
 		mainProfile = loadSettings();
+
+		if(mainProfile.cityName.equals("Unnammed City"))
+			askForNewName();
 
 		//Add prayer objects to the prayersList
 		prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
@@ -75,8 +81,13 @@ public class MainActivity extends Activity  {
 		Button locOnMapButton = (Button)findViewById(R.id.button1);
 		locOnMapButton.setOnClickListener(locOnMapButtonListener);
 
+		Button newCityButton = (Button)findViewById(R.id.button5);
+		newCityButton.setOnClickListener(newCityButtonListener);
+
+		Button loadCityButton = (Button)findViewById(R.id.button4);
+		loadCityButton.setOnClickListener(loadCityButtonListener);
+
 		Button changeDateButton = (Button)findViewById(R.id.button3);
-		changeDateButton.setText("Prayer times table for "+city_string+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
 		changeDateButton.setOnClickListener(changeDateButtonListener);
 
 		//Define the GPS checkBox
@@ -146,6 +157,20 @@ public class MainActivity extends Activity  {
 			startActivityForResult(mapIntent,0);
 		}
 	};
+
+	View.OnClickListener newCityButtonListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			newCity();
+		}
+	};
+
+	View.OnClickListener loadCityButtonListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
+			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
+			startActivityForResult(mapIntent,1);
+		}
+	};
 	View.OnClickListener changeDateButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
 
@@ -157,22 +182,36 @@ public class MainActivity extends Activity  {
 					cmonth=monthOfYear;
 					cday=dayOfMonth;
 
-					//Do whatever you want with the variables you get here
-					Button myButton2 = (Button)findViewById(R.id.button3);
-					myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth)+"/"+String.valueOf(year));
-
 					//Reconfigure our settings blob.
 					myTimeCalculator.mySettings.year = cyear;
 					myTimeCalculator.mySettings.month = cmonth+1;
 					myTimeCalculator.mySettings.day = cday;
 
 					//Calculate the new prayer times for the updated PrayersList and display them on the PrayersList
+					applyProfile(mainProfile);
 					calculateAndDisplay(prayersList);                    
 
 				}
 			},  cyear, cmonth, cday);
 			calender.setTitle("Show prayer times for:");
 			calender.show(); 
+		}
+	};
+	View.OnClickListener onOkNewNameListener = new OnClickListener(){
+		public void onClick(View v) {
+			EditText edit = (EditText) newNameDialog.findViewById(R.id.editText1);
+			String inputString = edit.getText().toString();
+			//If the user typed something
+			if(!inputString.equals("")){
+				//Get the new name and send it to save settings
+				mainProfile.cityName = inputString;
+				applyProfile(mainProfile);
+				saveSettings(mainProfile);
+				//Add it to the database too
+				db.addProfile(mainProfile);
+				// Dismiss dialog
+				newNameDialog.dismiss();
+			}
 		}
 	};
 	View.OnClickListener gpsCheckBoxListener = new View.OnClickListener() {
@@ -232,29 +271,6 @@ public class MainActivity extends Activity  {
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MINIMUM_TIME_BETWEEN_UPDATES,MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,locationListener);
 		}
-
-		/*List<String> providers =locationManager.getProviders(true);
-
-		 if (myTimeCalculator.mySettings.latitude==0.0 && myTimeCalculator.mySettings.latitude==0.0){
-
-			Location l = null;
-			for (int i=providers.size()-1; i>=0; i--) {
-				l = locationManager.getLastKnownLocation(providers.get(i));
-				if (l != null) break;
-			}
-			if (l != null) {
-				mainProfile.savedLatitude = l.getLatitude();
-				EditText latit = (EditText)findViewById(R.id.editText1);
-				latit.setText(""+mainProfile.savedLatitude);
-
-				mainProfile.savedLongitude = l.getLongitude();
-				EditText longit = (EditText)findViewById(R.id.editText2);
-				longit.setText(""+mainProfile.savedLongitude);
-
-				saveSettings(mainProfile);
-				applyProfile(mainProfile); //Apply changes from mainProfile into mySettings
-			}
-		} */
 	}
 	private class MyLocationListener implements LocationListener{
 		public void onLocationChanged(Location location) {  
@@ -288,28 +304,28 @@ public class MainActivity extends Activity  {
 		}  
 	} 
 	public Profile loadSettings(){
-		Profile profile = new Profile();
+
 		SharedPreferences settings  = getSharedPreferences(PREFS_NAME, 0);
+		Profile profile = new Profile();
 
-		profile.savedLatitude =  Double.parseDouble(settings.getString("savedLatitude", "0"));
-		profile.savedLongitude = Double.parseDouble(settings.getString("savedLongitude", "0"));
-		profile.savedTimezone = settings.getInt("savedTimezone", 0);
-		profile.cityName = settings.getString("cityName", "Unnammed City");
-		profile.useGPS = settings.getBoolean("useGPS", true);
-		profile.useTimezone = settings.getBoolean("useTimezone", true);
+		String lastCity = settings.getString("lastCity", "Unnammed City");
 
-		return profile;
+		if(lastCity.equals("Unnammed City"))
+			return profile;
+		else
+			return db.getProfile(lastCity);
 	}
 	public void saveSettings(Profile profile){
+		//Get shared preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("savedLatitude", ""+profile.savedLatitude);
-		editor.putString("savedLongitude", ""+profile.savedLongitude);
-		editor.putInt("savedTimezone", profile.savedTimezone);
-		editor.putString("cityName", profile.cityName);
-		editor.putBoolean("useGPS", profile.useGPS);
-		editor.putBoolean("useTimezone", profile.useTimezone);
-		editor.commit();
+
+		// if the city is not Unnammed City, update it on db and save its name
+		if(!profile.cityName.equals("Unnammed City")){
+			editor.putString("lastCity", profile.cityName);
+			editor.commit();
+			db.addProfile(profile);
+		}
 	}
 	public int getTimezone(){
 		Calendar c = Calendar.getInstance();
@@ -326,6 +342,9 @@ public class MainActivity extends Activity  {
 		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
 
 		//Set up the GUI from this profile
+		Button changeDateButton = (Button)findViewById(R.id.button3);
+		changeDateButton.setText("Prayer times table for "+profile.cityName+" in "+ String.valueOf(cmonth+1)+"/"+String.valueOf(cday)+"/"+String.valueOf(cyear));
+
 		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
 		gpsCheckBox.setChecked(profile.useGPS);
 
@@ -368,19 +387,101 @@ public class MainActivity extends Activity  {
 
 	// After map activity is finished
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Get its data parameters
-		Bundle params = data.getExtras();
-		// Check the 'result' entry for 'ok' or 'cancelled'
-		String result = params.getString("result");
-		//Apply the new coordinates to the current profile and the GUI
-		if(result.equals("ok")){
-			mainProfile.useGPS = false;
-			mainProfile.savedLatitude = params.getDouble("latitude");
-			mainProfile.savedLongitude = params.getDouble("longitude");
+		if(resultCode != RESULT_CANCELED){
+			// Get its data parameters
+			Bundle params = data.getExtras();
 
-			applyProfile(mainProfile);
-			saveSettings(mainProfile);
-			calculateAndDisplay(prayersList);
+			//If results came from MapActivity
+			if(requestCode == 0){
+				// Check the 'result' entry for 'ok' or 'cancelled'
+				String result = params.getString("result");
+				//Apply the new coordinates to the current profile and the GUI
+				if(result.equals("ok")){
+					mainProfile.useGPS = false;
+					mainProfile.savedLatitude = params.getDouble("latitude");
+					mainProfile.savedLongitude = params.getDouble("longitude");
+
+					applyProfile(mainProfile);
+					saveSettings(mainProfile);
+					calculateAndDisplay(prayersList);
+				}
+			}
+
+			//If results came from cityManager load activity (with statusOK status)
+			if(requestCode == 1 && params.getString("status").equals("statusOK")){
+				// Receive the loaded profile
+				mainProfile = (Profile)(data.getParcelableArrayListExtra("profile").get(0));
+
+				// Save the profile, apply gui, and recalculate
+				saveSettings(mainProfile);
+				applyProfile(mainProfile);
+				calculateAndDisplay(prayersList);
+			}
 		}
 	}
+
+	void askForNewName(){
+		newNameDialog = new Dialog(MainActivity.this);
+		newNameDialog.setContentView(R.layout.city_new_name);
+		newNameDialog.setTitle("What is this city's name?");
+		newNameDialog.setCancelable(false);
+
+		//set up button (OK)
+		Button button2 = (Button) newNameDialog.findViewById(R.id.Button02);
+		button2.setOnClickListener(onOkNewNameListener);
+
+		//now that the dialog is set up, it's time to show it
+		newNameDialog.show();
+	}
+	void newCity(){
+		dialog = new Dialog(MainActivity.this);
+		dialog.setContentView(R.layout.city_name);
+		dialog.setTitle("City name:");
+		dialog.setCancelable(true);
+
+		//set up button (Cancel)
+		Button button = (Button) dialog.findViewById(R.id.Button01);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		//set up button (OK)
+		Button button2 = (Button) dialog.findViewById(R.id.Button02);
+		button2.setOnClickListener(okListener);
+		//now that the dialog is set up, it's time to show it
+		dialog.show();
+	}
+
+	View.OnClickListener okListener = new OnClickListener(){
+		public void onClick(View v) {
+			EditText edit = (EditText) dialog.findViewById(R.id.editText1);
+			String inputString = edit.getText().toString();
+			Profile newProfile = mainProfile;
+			//If the user typed something
+			if(!inputString.equals("")){
+				newProfile.cityName = inputString;
+				//Delete if an existing one is there
+				if(db.profileExists(newProfile.cityName))
+					db.deleteProfile(newProfile.cityName);
+
+				//Add the new profile
+				db.addProfile(newProfile);
+
+				//A little tip
+				Toast.makeText(getApplicationContext(),"Now you can set the new coordinates and the timezone.",Toast.LENGTH_LONG).show();
+
+				//Update current profile and settings
+				mainProfile = newProfile;
+				applyProfile(mainProfile);
+				saveSettings(mainProfile);
+				calculateAndDisplay(prayersList);
+
+				// Dismiss dialog and cityManager
+				dialog.dismiss();
+			}
+		}
+	};
 }
