@@ -118,16 +118,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return citiesList;
 	}
 
-	public void deleteProfile(Profile profile) {
+	public void deleteProfile(String cityName) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		// Check if the Profile is actually there
 		Cursor cursor = db.query(TABLE_CITIES, new String[] { KEY_ID,
 				KEY_NAME, KEY_LAT, KEY_LONG, KEY_TZ, KEY_useGPS, KEY_useTimezone }, KEY_NAME + "=?",
-				new String[] { profile.cityName }, null, null, null, null);
+				new String[] { cityName }, null, null, null, null);
 		// If yes, then delete
 		if (cursor.moveToFirst()){
 			db.delete(TABLE_CITIES, KEY_NAME + " = ?",
-					new String[] { profile.cityName });
+					new String[] { cityName });
 		}
 		db.close();
 	}
