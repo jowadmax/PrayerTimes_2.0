@@ -70,9 +70,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_useGPS, ""+profile.useGPS);
 		values.put(KEY_useTimezone, ""+profile.useTimezone);
 
-		// Inserting Row
-		db.insert(TABLE_CITIES, null, values);
-		db.close(); // Closing database connection
+		if(profileExists(profile.cityName))
+			updateProfile(profile);
+		else
+			db.insert(TABLE_CITIES, null, values);
 
 	}
 	public Profile getProfile(String cityName){
@@ -134,7 +135,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			db.delete(TABLE_CITIES, KEY_NAME + " = ?",
 					new String[] { cityName });
 		}
-		db.close();
 	}
 
 	public Boolean profileExists(String cityName){
@@ -143,9 +143,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.query(TABLE_CITIES, new String[] { KEY_ID,
 				KEY_NAME, KEY_LAT, KEY_LONG, KEY_TZ, KEY_useGPS, KEY_useTimezone }, KEY_NAME + "=?",
 				new String[] { cityName }, null, null, null, null);
+
 		result = cursor!=null && cursor.moveToFirst();
-		db.close();
 		return result;
 	}
-
 }
