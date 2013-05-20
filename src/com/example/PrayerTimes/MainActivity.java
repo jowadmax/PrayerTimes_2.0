@@ -83,7 +83,6 @@ public class MainActivity extends Activity  {
 		loadCityButton.setOnClickListener(loadCityButtonListener);
 
 		Button changeDateButton = (Button)findViewById(R.id.button3);
-		changeDateButton.setText("Prayer times table for "+city_string+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
 		changeDateButton.setOnClickListener(changeDateButtonListener);
 
 		//Define the GPS checkBox
@@ -350,6 +349,9 @@ public class MainActivity extends Activity  {
 		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
 
 		//Set up the GUI from this profile
+		Button changeDateButton = (Button)findViewById(R.id.button3);
+		changeDateButton.setText("Prayer times table for "+profile.cityName+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
+
 		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
 		gpsCheckBox.setChecked(profile.useGPS);
 
