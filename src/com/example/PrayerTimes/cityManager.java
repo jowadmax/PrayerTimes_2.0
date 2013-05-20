@@ -70,8 +70,6 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 		}
 		// If clicked on a city name when in load
 		if(!text.equals("<Delete City")){
-
-			Toast.makeText(getApplicationContext(),"You have deleted "+text+" from your cities list.",Toast.LENGTH_LONG).show();
 			// Uppdate the profile from database
 			newProfile = db.getProfile(text);
 
@@ -100,6 +98,7 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 			}
 			else
 			{
+				Toast.makeText(getApplicationContext(),"You have deleted "+text+" from your cities list.",Toast.LENGTH_LONG).show();
 				db.deleteProfile(""+(((TextView)view).getText()));
 				finish();
 			}
