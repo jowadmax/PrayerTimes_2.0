@@ -49,6 +49,7 @@ public class MainActivity extends Activity  {
 	boolean myLocShown = false;
 	Dialog mainDialog; 
 	Dialog newNameDialog;
+	DatabaseHandler db = new DatabaseHandler(this);
 
 
 	@Override
@@ -158,6 +159,7 @@ public class MainActivity extends Activity  {
 	
 	View.OnClickListener saveCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
+			// Send the current profile over to the cityManager
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
 			mapIntent.putExtra("operationType","save");
 			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
@@ -204,9 +206,12 @@ public class MainActivity extends Activity  {
 			String inputString = edit.getText().toString();
 			//If the user typed something
 			if(!inputString.equals("")){
+				//Get the new name and send it to save settings
 				mainProfile.cityName = inputString;
 				applyProfile(mainProfile);
 				saveSettings(mainProfile);
+				//Add it to the database too
+				db.addProfile(mainProfile);
 				// Dismiss dialog
 				newNameDialog.dismiss();
 			}
@@ -408,20 +413,34 @@ public class MainActivity extends Activity  {
 
 	// After map activity is finished
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//If results came from MapActivity
-		if(requestCode == 0){
+		if(resultCode != RESULT_CANCELED){
 			// Get its data parameters
 			Bundle params = data.getExtras();
-			// Check the 'result' entry for 'ok' or 'cancelled'
-			String result = params.getString("result");
-			//Apply the new coordinates to the current profile and the GUI
-			if(result.equals("ok")){
-				mainProfile.useGPS = false;
-				mainProfile.savedLatitude = params.getDouble("latitude");
-				mainProfile.savedLongitude = params.getDouble("longitude");
 
-				applyProfile(mainProfile);
+			//If results came from MapActivity
+			if(requestCode == 0){
+				// Check the 'result' entry for 'ok' or 'cancelled'
+				String result = params.getString("result");
+				//Apply the new coordinates to the current profile and the GUI
+				if(result.equals("ok")){
+					mainProfile.useGPS = false;
+					mainProfile.savedLatitude = params.getDouble("latitude");
+					mainProfile.savedLongitude = params.getDouble("longitude");
+
+					applyProfile(mainProfile);
+					saveSettings(mainProfile);
+					calculateAndDisplay(prayersList);
+				}
+			}
+
+			//If results came from cityManager load activity (with statusOK status)
+			if(requestCode == 1 && params.getString("status").equals("statusOK")){
+				// Receive the loaded profile
+				mainProfile = (Profile)(data.getParcelableArrayListExtra("profile").get(0));
+
+				// Save the profile, apply gui, and recalculate
 				saveSettings(mainProfile);
+				applyProfile(mainProfile);
 				calculateAndDisplay(prayersList);
 			}
 		}

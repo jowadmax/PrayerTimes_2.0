@@ -1,11 +1,14 @@
 package com.example.PrayerTimes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.view.View;
@@ -83,6 +86,19 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 		if(text.equals("<Delete City>")){
 			Toast.makeText(getApplicationContext(),"To delete a city press and hold on its name.",Toast.LENGTH_LONG).show();
 		}
+		// If clicked on a city name when in load
+		if(operationType.equals("load") && !text.equals("<Delete City")){
+			// Uppdate the profile from database
+			newProfile = db.getProfile(text);
+
+			// Send it back to MainActivity
+			sendProfileBack(newProfile);
+		}
+		// If clicked on a city name when in save
+		if(operationType.equals("save") && !text.equals("<New City>")){
+			//Update that database entry
+			db.updateProfile(newProfile);
+		}
 		// Clicked on anything except <Delete City> or <New City>
 		if(!text.equals("<Delete City>") && !text.equals("<New City>"))
 			finish();
@@ -138,8 +154,16 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 				//Delete if an existing one is there
 				if(db.profileExists(newProfile.cityName))
 					db.deleteProfile(newProfile.cityName);
+
 				//Add the new profile
 				db.addProfile(newProfile);
+
+				//Send the profile back to MainActivity
+				sendProfileBack(newProfile);
+
+				//A little tip
+				Toast.makeText(getApplicationContext(),"Now you can set the new coordinates and the timezone.",Toast.LENGTH_LONG).show();
+
 				// Dismiss dialog and cityManager
 				dialog.dismiss();
 				killme();
@@ -149,5 +173,13 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 
 	void killme(){
 		this.finish();
+	}
+
+	void sendProfileBack(Profile profile){
+		// Send the profile back to MainActivity
+		Intent cityManagerIntent = getIntent();
+		cityManagerIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(profile)));
+		cityManagerIntent.putExtra("status", "statusOK");
+		setResult(RESULT_OK,cityManagerIntent);
 	}
 }
