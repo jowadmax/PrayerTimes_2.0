@@ -81,8 +81,8 @@ public class MainActivity extends Activity  {
 		Button locOnMapButton = (Button)findViewById(R.id.button1);
 		locOnMapButton.setOnClickListener(locOnMapButtonListener);
 		
-		Button saveCityButton = (Button)findViewById(R.id.button5);
-		saveCityButton.setOnClickListener(saveCityButtonListener);
+		Button newCityButton = (Button)findViewById(R.id.button5);
+		newCityButton.setOnClickListener(newCityButtonListener);
 		
 		Button loadCityButton = (Button)findViewById(R.id.button4);
 		loadCityButton.setOnClickListener(loadCityButtonListener);
@@ -158,13 +158,8 @@ public class MainActivity extends Activity  {
 		}
 	};
 	
-	View.OnClickListener saveCityButtonListener = new View.OnClickListener() {
+	View.OnClickListener newCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
-/*			// Send the current profile over to the cityManager
-			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
-			mapIntent.putExtra("operationType","save");
-			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
-			startActivityForResult(mapIntent,1);*/
 			newCity();
 		}
 	};
