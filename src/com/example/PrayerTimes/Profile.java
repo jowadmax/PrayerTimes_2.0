@@ -43,7 +43,12 @@ public class Profile implements Parcelable {
     	useTimezone = in.readByte() == 1;
     }
 	public Profile() {
-		// TODO Auto-generated constructor stub
+		savedLatitude = 0.0;
+		savedLongitude = 0.0;
+		savedTimezone = 0;
+		cityName = "Unnammed City";
+		useGPS =  true;
+		useTimezone = true;
 	}
 
 }
