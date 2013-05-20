@@ -144,7 +144,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/button_menu"
-        android:text="Save City" />
+        android:text="New City" />
 
     <Button
         android:id="@+id/button1"
