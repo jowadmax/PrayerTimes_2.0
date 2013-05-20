@@ -49,6 +49,7 @@ public class MainActivity extends Activity  {
 	boolean myLocShown = false;
 	Dialog mainDialog; 
 	Dialog newNameDialog;
+	Dialog dialog;
 	DatabaseHandler db = new DatabaseHandler(this);
 
 
@@ -159,18 +160,18 @@ public class MainActivity extends Activity  {
 	
 	View.OnClickListener saveCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			// Send the current profile over to the cityManager
+/*			// Send the current profile over to the cityManager
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
 			mapIntent.putExtra("operationType","save");
 			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
-			startActivityForResult(mapIntent,1);
+			startActivityForResult(mapIntent,1);*/
+			newCity();
 		}
 	};
 	
 	View.OnClickListener loadCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
-			mapIntent.putExtra("operationType","load");
 			mapIntent.putParcelableArrayListExtra("profile", new ArrayList<Profile>(Collections.singletonList(mainProfile)));
 			startActivityForResult(mapIntent,1);
 		}
@@ -460,4 +461,55 @@ public class MainActivity extends Activity  {
 		//now that the dialog is set up, it's time to show it
 		newNameDialog.show();
 	}
+	void newCity(){
+		dialog = new Dialog(MainActivity.this);
+		dialog.setContentView(R.layout.city_name);
+		dialog.setTitle("City name:");
+		dialog.setCancelable(true);
+
+		//set up button (Cancel)
+		Button button = (Button) dialog.findViewById(R.id.Button01);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		//set up button (OK)
+		Button button2 = (Button) dialog.findViewById(R.id.Button02);
+		button2.setOnClickListener(okListener);
+		//now that the dialog is set up, it's time to show it
+		dialog.show();
+	}
+
+	View.OnClickListener okListener = new OnClickListener(){
+		public void onClick(View v) {
+			EditText edit = (EditText) dialog.findViewById(R.id.editText1);
+			String inputString = edit.getText().toString();
+			Profile newProfile = mainProfile;
+			//If the user typed something
+			if(!inputString.equals("")){
+				newProfile.cityName = inputString;
+				//Delete if an existing one is there
+				if(db.profileExists(newProfile.cityName))
+					db.deleteProfile(newProfile.cityName);
+
+				//Add the new profile
+				db.addProfile(newProfile);
+
+				//A little tip
+				Toast.makeText(getApplicationContext(),"Now you can set the new coordinates and the timezone.",Toast.LENGTH_LONG).show();
+
+				//Update current profile and settings
+				mainProfile = newProfile;
+				applyProfile(mainProfile);
+				saveSettings(mainProfile);
+				calculateAndDisplay(prayersList);
+				
+				// Dismiss dialog and cityManager
+				dialog.dismiss();
+			}
+		}
+	};
 }
