@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -47,7 +46,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ KEY_TZ + " TEXT," 
 				+ KEY_useGPS + " TEXT," 
 				+ KEY_useTimezone + " TEXT" + ")";
-		Log.v("MyActivity", CREATE_CITIES_TABLE);
 		db.execSQL(CREATE_CITIES_TABLE);
 	}
 

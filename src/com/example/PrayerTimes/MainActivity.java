@@ -80,10 +80,10 @@ public class MainActivity extends Activity  {
 
 		Button locOnMapButton = (Button)findViewById(R.id.button1);
 		locOnMapButton.setOnClickListener(locOnMapButtonListener);
-		
+
 		Button newCityButton = (Button)findViewById(R.id.button5);
 		newCityButton.setOnClickListener(newCityButtonListener);
-		
+
 		Button loadCityButton = (Button)findViewById(R.id.button4);
 		loadCityButton.setOnClickListener(loadCityButtonListener);
 
@@ -157,13 +157,13 @@ public class MainActivity extends Activity  {
 			startActivityForResult(mapIntent,0);
 		}
 	};
-	
+
 	View.OnClickListener newCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
 			newCity();
 		}
 	};
-	
+
 	View.OnClickListener loadCityButtonListener = new View.OnClickListener() {
 		public void onClick(View v) {
 			Intent mapIntent = new Intent(getBaseContext(), cityManager.class);
@@ -271,29 +271,6 @@ public class MainActivity extends Activity  {
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MINIMUM_TIME_BETWEEN_UPDATES,MINIMUM_DISTANCE_CHANGE_FOR_UPDATES,locationListener);
 		}
-
-		/*List<String> providers =locationManager.getProviders(true);
-
-		 if (myTimeCalculator.mySettings.latitude==0.0 && myTimeCalculator.mySettings.latitude==0.0){
-
-			Location l = null;
-			for (int i=providers.size()-1; i>=0; i--) {
-				l = locationManager.getLastKnownLocation(providers.get(i));
-				if (l != null) break;
-			}
-			if (l != null) {
-				mainProfile.savedLatitude = l.getLatitude();
-				EditText latit = (EditText)findViewById(R.id.editText1);
-				latit.setText(""+mainProfile.savedLatitude);
-
-				mainProfile.savedLongitude = l.getLongitude();
-				EditText longit = (EditText)findViewById(R.id.editText2);
-				longit.setText(""+mainProfile.savedLongitude);
-
-				saveSettings(mainProfile);
-				applyProfile(mainProfile); //Apply changes from mainProfile into mySettings
-			}
-		} */
 	}
 	private class MyLocationListener implements LocationListener{
 		public void onLocationChanged(Location location) {  
@@ -501,7 +478,7 @@ public class MainActivity extends Activity  {
 				applyProfile(mainProfile);
 				saveSettings(mainProfile);
 				calculateAndDisplay(prayersList);
-				
+
 				// Dismiss dialog and cityManager
 				dialog.dismiss();
 			}

@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,21 +27,21 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 	private ArrayAdapter<String> cities;
 	Profile newProfile = new Profile();
 	DatabaseHandler db = new DatabaseHandler(this);
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.city_listview);
-		
+
 		// Receive the data passed from MainActivity
 		Bundle params = getIntent().getExtras();
 
 		this.setTitle("Choose a city to load from:");		
-		
+
 		// Construct the cities list
 		Vector<String> items = new Vector<String>();
 		items.add("<Delete City>");
-		
+
 		List<Profile> allCities = db.getAllProfiles();
 		for(int i=0;i<allCities.size();i++){
 			items.add((allCities.get(i)).cityName);
@@ -51,13 +50,13 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 		cityList = (ListView) findViewById(R.id.list);
 		cityList.setOnItemClickListener(this);
 		cityList.setOnItemLongClickListener(this);
-        cities = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items.toArray(new String[0]));
-        cityList.setAdapter(cities);
+		cities = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items.toArray(new String[0]));
+		cityList.setAdapter(cities);
 
-        // get the mainProfile from MainActivity
+		// get the mainProfile from MainActivity
 		newProfile = (Profile)params.getParcelableArrayList("profile").get(0);
 
-        }
+	}
 
 
 	@Override
@@ -79,7 +78,7 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 			// Send it back to MainActivity
 			sendProfileBack(newProfile);
 		}
-		
+
 		// Clicked on anything except <Delete City>
 		if(!text.equals("<Delete City>"))
 			finish();
@@ -96,7 +95,6 @@ public final class cityManager extends Activity implements OnItemClickListener, 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		String text = (((TextView)(view)).getText()).toString();
 		if(!(text.equals("<Delete City>"))){
-			Log.v("MyActivity", newProfile.cityName + text);
 			if(newProfile.cityName.equals(text)){
 				Toast.makeText(getApplicationContext(),"You cannot delete current city, please select another city then delete this.",Toast.LENGTH_LONG).show();
 			}
