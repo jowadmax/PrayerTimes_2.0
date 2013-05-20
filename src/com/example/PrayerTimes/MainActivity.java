@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -45,10 +46,9 @@ public class MainActivity extends Activity  {
 	final ArrayList<Prayer> prayersList = new ArrayList<Prayer>(); //Prayers objects list
 	Profile mainProfile; //Main settings profile
 
-	String city_string="Arlington, VA";
-
 	boolean myLocShown = false;
 	Dialog mainDialog; 
+	Dialog newNameDialog;
 
 
 	@Override
@@ -59,6 +59,9 @@ public class MainActivity extends Activity  {
 
 		//Load Settings into main Profile
 		mainProfile = loadSettings();
+
+		if(mainProfile.cityName.equals("Unnammed City"))
+			askForNewName();
 
 		//Add prayer objects to the prayersList
 		prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
@@ -180,22 +183,33 @@ public class MainActivity extends Activity  {
 					cmonth=monthOfYear;
 					cday=dayOfMonth;
 
-					//Do whatever you want with the variables you get here
-					Button myButton2 = (Button)findViewById(R.id.button3);
-					myButton2.setText("Prayer times table for "+city_string+" in "+ String.valueOf(monthOfYear+1)+"/"+String.valueOf(dayOfMonth)+"/"+String.valueOf(year));
-
 					//Reconfigure our settings blob.
 					myTimeCalculator.mySettings.year = cyear;
 					myTimeCalculator.mySettings.month = cmonth+1;
 					myTimeCalculator.mySettings.day = cday;
 
 					//Calculate the new prayer times for the updated PrayersList and display them on the PrayersList
+					applyProfile(mainProfile);
 					calculateAndDisplay(prayersList);                    
 
 				}
 			},  cyear, cmonth, cday);
 			calender.setTitle("Show prayer times for:");
 			calender.show(); 
+		}
+	};
+	View.OnClickListener onOkNewNameListener = new OnClickListener(){
+		public void onClick(View v) {
+			EditText edit = (EditText) newNameDialog.findViewById(R.id.editText1);
+			String inputString = edit.getText().toString();
+			//If the user typed something
+			if(!inputString.equals("")){
+				mainProfile.cityName = inputString;
+				applyProfile(mainProfile);
+				saveSettings(mainProfile);
+				// Dismiss dialog
+				newNameDialog.dismiss();
+			}
 		}
 	};
 	View.OnClickListener gpsCheckBoxListener = new View.OnClickListener() {
@@ -350,7 +364,7 @@ public class MainActivity extends Activity  {
 
 		//Set up the GUI from this profile
 		Button changeDateButton = (Button)findViewById(R.id.button3);
-		changeDateButton.setText("Prayer times table for "+profile.cityName+" in "+ String.valueOf(now.get(Calendar.MONTH)+1)+"/"+String.valueOf(now.get(Calendar.DAY_OF_MONTH))+"/"+String.valueOf(now.get(Calendar.YEAR)));
+		changeDateButton.setText("Prayer times table for "+profile.cityName+" in "+ String.valueOf(cmonth+1)+"/"+String.valueOf(cday)+"/"+String.valueOf(cyear));
 
 		CheckBox gpsCheckBox = (CheckBox)findViewById(R.id.checkBox1);
 		gpsCheckBox.setChecked(profile.useGPS);
@@ -411,5 +425,19 @@ public class MainActivity extends Activity  {
 				calculateAndDisplay(prayersList);
 			}
 		}
+	}
+
+	void askForNewName(){
+		newNameDialog = new Dialog(MainActivity.this);
+		newNameDialog.setContentView(R.layout.city_new_name);
+		newNameDialog.setTitle("What is this city's name?");
+		newNameDialog.setCancelable(false);
+
+		//set up button (OK)
+		Button button2 = (Button) newNameDialog.findViewById(R.id.Button02);
+		button2.setOnClickListener(onOkNewNameListener);
+
+		//now that the dialog is set up, it's time to show it
+		newNameDialog.show();
 	}
 }
