@@ -131,4 +131,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		}
 		db.close();
 	}
+
+	public Boolean profileExists(String cityName){
+		SQLiteDatabase db = this.getWritableDatabase();
+		Boolean result;
+		Cursor cursor = db.query(TABLE_CITIES, new String[] { KEY_ID,
+				KEY_NAME, KEY_LAT, KEY_LONG, KEY_TZ, KEY_useGPS, KEY_useTimezone }, KEY_NAME + "=?",
+				new String[] { cityName }, null, null, null, null);
+		result = cursor!=null && cursor.moveToFirst();
+		db.close();
+		return result;
+	}
 }
