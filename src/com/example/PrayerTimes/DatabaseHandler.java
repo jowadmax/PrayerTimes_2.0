@@ -101,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	}
 	public List<Profile> getAllProfiles(){
 		List<Profile> citiesList = new ArrayList<Profile>();
-		String selectQuery = "SELECT  * FROM " + TABLE_CITIES;
+		String selectQuery = "SELECT  * FROM " + TABLE_CITIES + " ORDER BY "+  KEY_NAME;
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
