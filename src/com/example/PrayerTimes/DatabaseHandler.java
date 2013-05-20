@@ -93,6 +93,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		}
 		return profile;
 	}
+
+	public void updateProfile(Profile profile){
+		deleteProfile(profile.cityName);
+		addProfile(profile);
+	}
 	public List<Profile> getAllProfiles(){
 		List<Profile> citiesList = new ArrayList<Profile>();
 		String selectQuery = "SELECT  * FROM " + TABLE_CITIES;
@@ -142,4 +147,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 		return result;
 	}
+
 }
