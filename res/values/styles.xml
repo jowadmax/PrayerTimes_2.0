@@ -9,4 +9,8 @@
         <item name="android:windowNoTitle">true</item>
         /></style>
 
+    <style name="CustomCityTheme" parent="android:Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        /></style>
+
 </resources>

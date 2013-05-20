@@ -100,13 +100,13 @@ public class MapActivity extends FragmentActivity implements OnMapLongClickListe
 	public void onCancel(View view){
 		Intent mapIntent = getIntent();
 		mapIntent.putExtra("result","cancelled");
-		setResult(0,mapIntent);
+		setResult(RESULT_CANCELED,mapIntent);
 		this.finish();
 	}
 	public void onOK(View view){
 		Intent mapIntent = getIntent();
 		mapIntent.putExtra("result","ok");
-		setResult(0,mapIntent);
+		setResult(RESULT_OK,mapIntent);
 		this.finish();
 	}
 
