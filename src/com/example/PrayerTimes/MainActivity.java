@@ -337,11 +337,6 @@ public class MainActivity extends Activity  {
 		return (int)tz;
 	}
 	public void applyProfile(Profile profile){
-		//Set the calculator values from this profile
-		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
-		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
-		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
-
 		//Set up the GUI from this profile
 		Button changeDateButton = (Button)findViewById(R.id.button3);
 		changeDateButton.setText("Prayer times table for "+profile.cityName+" in "+ String.valueOf(cmonth+1)+"/"+String.valueOf(cday)+"/"+String.valueOf(cyear));
@@ -383,6 +378,11 @@ public class MainActivity extends Activity  {
 			locationListener = null;
 			System.gc();
 		}
+		
+		//Set the calculator values from this profile
+		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
+		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
+		myTimeCalculator.mySettings.timeZone = profile.savedTimezone;
 
 	}
 
