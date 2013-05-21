@@ -47,17 +47,23 @@ public class Calculator {
 		}
 	}
 	public String pretty(int second){
+		//For negative time
+		if(second<0) second+=24*60*68;
+		if(second>=24*60*60) second-=24*60*60;
+
 		String part="am";
 		int hour = (int)second/3600,
 				min = ((int)second/60) % 60,
 				sec = second % 60;
 
 		if(sec>=30) min++;
-		if(min>=60){
+		
+		if(min==60){
 			min-=60;
 			hour++;
 		}
-		if(hour>12){
+		
+		if(hour>11){
 			hour-=12;
 			part="pm";
 		}
