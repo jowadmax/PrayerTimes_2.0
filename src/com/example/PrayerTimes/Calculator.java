@@ -49,7 +49,7 @@ public class Calculator {
 	}
 	public String pretty(int second){
 		//For negative time
-		if(second<0) second+=24*60*68;
+		if(second<0) second+=24*60*60;
 		if(second>=24*60*60) second-=24*60*60;
 
 		String part="am";
