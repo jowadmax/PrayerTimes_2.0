@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -122,8 +123,8 @@ public class MainActivity extends Activity  {
 			// Calculate prayer times and store them inside the objects
 			myTimeCalculator.getTimes(prayersList);
 
-			//Calculate time for midnight  { Midnight = Sunset + (Sunset-Fajr)/2 }
-			prayersList.get(5).prayerTime = prayersList.get(3).prayerTime + (prayersList.get(0).prayerTime-prayersList.get(3).prayerTime)/2;  
+			//Calculate time for midnight  { Midnight = Sunset + (Fajr+24-Sunset)/2 }
+			prayersList.get(5).prayerTime = prayersList.get(3).prayerTime + (prayersList.get(0).prayerTime+(24*60*60)-prayersList.get(3).prayerTime)/2;
 
 			// Loop over the objects showing their times
 			/*for(int index=0;index<5;index++)
