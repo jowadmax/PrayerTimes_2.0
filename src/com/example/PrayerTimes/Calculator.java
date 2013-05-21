@@ -2,6 +2,8 @@ package com.example.PrayerTimes;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class Calculator {
 
 	public settingsBlob mySettings;
@@ -11,21 +13,23 @@ public class Calculator {
 		this.mySettings = newSettings;
 	}
 	public void getTimes(ArrayList<Prayer> prayersList){
-		// Start calculations time at 2:30am
-		int time=9000;		
+		// Start calculations time at 12:00am
+		int time=0;
+		
 		//Loop through all Prayers objects
 		for(int index=0; index < prayersList.size(); index++){
 
 			if(prayersList.get(index).type == "exact"){
 				//Calculate the time for the Prayer object
+				Log.v("MyActivity","Processing "+prayersList.get(index).name);
 				Prayer temp = calculateExact(prayersList.get(index), time);
 
 				//Store the info inside the object
 				prayersList.get(index).prayerTime = temp.prayerTime;
 				prayersList.get(index).timeTaken = temp.timeTaken;
-
 				//Increase time counter
 				time+= prayersList.get(index).timeTaken;
+				
 			}
 
 			if(prayersList.get(index).type == "max"){
@@ -76,7 +80,7 @@ public class Calculator {
 	public double calculateAngle(int second){
 		double 	B3 = mySettings.latitude,     // Latitude
 				B4 = mySettings.longitude;    // Longitude
-		int		B5 = mySettings.timeZone,             // Offset
+		int		B5 = roughTimezone(mySettings.longitude),     // Offset (use rough timezone for now, then adjust later)
 				year = mySettings.year, 
 				month = mySettings.month,
 				day = mySettings.day,
@@ -111,15 +115,22 @@ public class Calculator {
 	}
 	private Prayer calculateExact(Prayer prayer, int startingTime){
 		int time=startingTime;
-		double leastAbsolute=100;
-
-		while(Math.abs(calculateAngle(time) - prayer.desiredAngle) < leastAbsolute){
-			leastAbsolute = Math.abs(calculateAngle(time) - prayer.desiredAngle);
+		double leastAbsolute=1000;
+		double angleNow = calculateAngle(time);
+		Boolean direction = prayer.direction.equals("up");
+		while(Math.abs(angleNow - prayer.desiredAngle) < leastAbsolute || ((angleNow < prayer.desiredAngle) && direction) || ((angleNow > prayer.desiredAngle) && !direction)){
+			leastAbsolute = Math.abs(angleNow - prayer.desiredAngle);
 			prayer.prayerTime = time;
 			time+=5;
+			angleNow = calculateAngle(time);
 		}
 
-		prayer.timeTaken = time-startingTime; 
+		prayer.timeTaken = time-startingTime;
+
+		// Adjust the result to current timezone
+		int offset = mySettings.timeZone-roughTimezone(mySettings.longitude);
+		prayer.prayerTime += offset*3600;
+
 		return prayer;
 	}
 	private Prayer calculateMax(Prayer prayer, double to, int startingTime){
@@ -134,6 +145,10 @@ public class Calculator {
 			angle = calculateAngle(time);
 		}
 		prayer.timeTaken = time - startingTime;
+
+		// Adjust the result to current timezone
+		int offset = mySettings.timeZone-roughTimezone(mySettings.longitude);
+		prayer.prayerTime += offset*3600;
 
 		return prayer;
 	}
@@ -164,5 +179,9 @@ public class Calculator {
 	}
 	private	double toDegrees(double num){
 		return (num*180.0)/ Math.PI;
+	}
+	
+	private int roughTimezone(double longitude){
+		return (int) (longitude/15);
 	}
 }

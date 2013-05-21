@@ -67,12 +67,12 @@ public class MainActivity extends Activity  {
 			askForNewName();
 
 		//Add prayer objects to the prayersList
-		prayersList.add(new Prayer(-18.0, "exact", "Fajr"));
-		prayersList.add(new Prayer(-0.83, "exact", "Sunrise"));
-		prayersList.add(new Prayer(0, "max", "Dhuhr"));
-		prayersList.add(new Prayer(-0.83, "exact", "Sunset"));
-		prayersList.add(new Prayer(-4.0, "exact", "Maghrib"));
-		prayersList.add(new Prayer(0, "noCalc", "Midnight"));
+		prayersList.add(new Prayer(-18.0, "exact", "Fajr", "up"));
+		prayersList.add(new Prayer(-0.83, "exact", "Sunrise", "up"));
+		prayersList.add(new Prayer(0, "max", "Dhuhr" ,"x"));
+		prayersList.add(new Prayer(-0.83, "exact", "Sunset", "down"));
+		prayersList.add(new Prayer(-4.0, "exact", "Maghrib", "down"));
+		prayersList.add(new Prayer(0, "noCalc", "Midnight", "down"));
 
 		//Set today's date into the blob.
 		myTimeCalculator.mySettings.year = cyear;
