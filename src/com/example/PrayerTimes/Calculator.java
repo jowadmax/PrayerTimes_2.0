@@ -64,10 +64,15 @@ public class Calculator {
 			hour++;
 		}
 
-		if(hour>11){
-			hour-=12;
+		if(hour>=12){
+			if(hour!=12)
+				hour-=12;
 			part="pm";
 		}
+
+		if(hour==00 && part.equals("am"))
+			hour+=12;
+
 		String string = String.format("%02d:%02d%s",hour,min,part);
 		return string;
 
