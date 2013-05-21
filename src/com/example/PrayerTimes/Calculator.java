@@ -2,8 +2,6 @@ package com.example.PrayerTimes;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class Calculator {
 
 	public settingsBlob mySettings;
@@ -15,13 +13,12 @@ public class Calculator {
 	public void getTimes(ArrayList<Prayer> prayersList){
 		// Start calculations time at 12:00am
 		int time=0;
-		
+
 		//Loop through all Prayers objects
 		for(int index=0; index < prayersList.size(); index++){
 
 			if(prayersList.get(index).type == "exact"){
 				//Calculate the time for the Prayer object
-				Log.v("MyActivity","Processing "+prayersList.get(index).name);
 				Prayer temp = calculateExact(prayersList.get(index), time);
 
 				//Store the info inside the object
@@ -29,7 +26,7 @@ public class Calculator {
 				prayersList.get(index).timeTaken = temp.timeTaken;
 				//Increase time counter
 				time+= prayersList.get(index).timeTaken;
-				
+
 			}
 
 			if(prayersList.get(index).type == "max"){
@@ -61,12 +58,12 @@ public class Calculator {
 				sec = second % 60;
 
 		if(sec>=30) min++;
-		
+
 		if(min==60){
 			min-=60;
 			hour++;
 		}
-		
+
 		if(hour>11){
 			hour-=12;
 			part="pm";
@@ -180,7 +177,7 @@ public class Calculator {
 	private	double toDegrees(double num){
 		return (num*180.0)/ Math.PI;
 	}
-	
+
 	private int roughTimezone(double longitude){
 		return (int) (longitude/15);
 	}

@@ -15,7 +15,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -378,7 +377,7 @@ public class MainActivity extends Activity  {
 			locationListener = null;
 			System.gc();
 		}
-		
+
 		//Set the calculator values from this profile
 		myTimeCalculator.mySettings.latitude = profile.savedLatitude;
 		myTimeCalculator.mySettings.longitude = profile.savedLongitude;
