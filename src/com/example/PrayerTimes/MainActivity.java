@@ -15,6 +15,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -117,6 +119,13 @@ public class MainActivity extends Activity  {
 
 	} //END OF OnCreate
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
 	public void calculateAndDisplay(ArrayList<Prayer> prayersList){
 		if(myTimeCalculator.mySettings.latitude != 0.0 || myTimeCalculator.mySettings.latitude != 0.0){ //Don't calculate on 0,0
 			// Calculate prayer times and store them inside the objects
