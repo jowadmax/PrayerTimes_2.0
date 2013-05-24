@@ -523,7 +523,7 @@ public class MainActivity extends Activity  {
 	void askForNewName(){
 		newNameDialog = new Dialog(MainActivity.this);
 		newNameDialog.setContentView(R.layout.city_new_name);
-		newNameDialog.setTitle("What is this city's name?");
+		newNameDialog.setTitle("Please input this city's name");
 		newNameDialog.setCancelable(false);
 
 		//set up button (OK)
